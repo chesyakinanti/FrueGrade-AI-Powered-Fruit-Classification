@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan / Upload — FruGrade</title>
+  <meta name="description" content="Unggah satu foto buah, periksa pratinjaunya, lalu jalankan prediksi CNN untuk melihat jenis dan status kesegaran." />
+  <meta name="theme-color" content="#2E5D3A" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="stylesheet" href="assets/css/fonts.css" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/fruit.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface" data-page="upload">
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+
+  <!-- ================= HEADER ================= -->
+  <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-warm-white/85 backdrop-blur-md">
+    <div class="shell flex h-[72px] items-center justify-between gap-4">
+      <a href="index.html" class="group flex items-center gap-2.5" aria-label="FruGrade — kembali ke Home">
+        <img src="assets/img/logo-mark.png" alt="" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:-rotate-3" width="50" height="94" />
+        <span class="font-headline-sm text-headline-sm tracking-tight text-forest-green">FruGrade</span>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-link" data-nav="home">Home</a>
+        <a href="upload.html" class="nav-link" data-nav="scan">Scan / Upload</a>
+        <a href="index.html#how-it-works" class="nav-link" data-nav="how">Cara Kerja</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <span class="chip chip-demo hidden sm:inline-flex">
+          <span class="icon text-[15px]">science</span>
+          <span data-mode-label>Mode demo</span>
+        </span>
+        <a href="index.html" class="btn-secondary !px-3.5 !py-2 !text-label-md">
+          <span class="icon text-[18px]">arrow_back</span>
+          <span class="hidden sm:inline">Home</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="relative overflow-hidden pb-24 pt-[72px] md:pb-16">
+    <div class="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-peach-orange/10 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -right-20 top-56 h-80 w-80 rounded-full bg-secondary-fixed/25 blur-3xl" aria-hidden="true"></div>
+
+    <div class="shell relative py-7 sm:py-10">
+      <!-- breadcrumb -->
+      <nav class="flex flex-wrap items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant" aria-label="Breadcrumb">
+        <a href="index.html" class="inline-flex items-center gap-1 transition-colors hover:text-soft-charcoal">
+          <span class="icon text-[16px]">home</span> Home
+        </a>
+        <span class="icon text-[14px] text-outline-variant">chevron_right</span>
+        <span class="font-label-md text-label-md text-forest-green">Scan / Upload</span>
+      </nav>
+
+      <!-- title -->
+      <div class="mt-4 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <div>
+          <span class="chip chip-demo mb-3" data-demo-only>
+            <span class="icon text-[15px]">science</span>
+            Prediksi disimulasikan — model belum terhubung
+          </span>
+          <h1 class="font-headline-lg text-[28px] font-bold leading-tight tracking-tight text-forest-green sm:text-[36px]">
+            Unggah foto buah
+          </h1>
+          <p class="mt-1.5 max-w-2xl font-body-md text-body-md text-on-surface-variant">
+            Pilih satu gambar yang jelas, periksa pratinjaunya, lalu jalankan analisis. Format JPG, JPEG, atau PNG.
+          </p>
+        </div>
+
+        <div class="flex w-fit items-center gap-2 rounded-xl bg-surface-container px-3.5 py-2.5">
+          <span class="icon text-[18px] text-forest-green">image</span>
+          <span class="font-label-md text-label-md font-medium text-soft-charcoal">Satu gambar per analisis</span>
+        </div>
+      </div>
+
+      <!-- ================= GRID ================= -->
+      <div class="mt-7 grid grid-cols-1 items-start gap-5 lg:grid-cols-12 lg:gap-6">
+        <!-- LEFT -->
+        <section class="flex flex-col gap-4 lg:col-span-6" aria-labelledby="step-upload">
+          <div class="panel p-5 sm:p-6" data-reveal>
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="grid h-8 w-8 flex-none place-items-center rounded-full bg-primary-fixed font-headline-sm text-[13px] font-bold text-primary">1</span>
+                <div>
+                  <h2 id="step-upload" class="font-headline-sm text-headline-sm text-forest-green">Pilih gambar buah</h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Foto asli dari perangkat, bukan screenshot</p>
+                </div>
+              </div>
+              <span class="icon text-[22px] text-outline-variant" aria-hidden="true">add_photo_alternate</span>
+            </div>
+
+            <!-- dropzone -->
+            <div id="dropzone" class="dropzone group mt-5 flex cursor-pointer flex-col items-center justify-center rounded-2xl bg-warm-white px-5 py-10 text-center shadow-sm"
+                 role="button" tabindex="0" aria-label="Pilih atau letakkan file gambar buah di sini">
+              <input id="file-input" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" class="sr-only" aria-label="Pilih file gambar buah" />
+
+              <span data-mascot="apple" data-size="52" id="upload-mascot" class="mascot-bob pointer-events-none absolute -right-1 -top-6" aria-hidden="true"></span>
+
+              <div class="mb-4 grid h-16 w-16 place-items-center rounded-full bg-surface-container text-primary transition-transform duration-300 group-hover:scale-110">
+                <span class="icon text-[34px]">cloud_upload</span>
+              </div>
+
+              <p class="font-label-lg text-label-lg text-soft-charcoal">Tarik &amp; letakkan foto di sini</p>
+              <p class="mt-1 font-body-md text-body-md text-on-surface-variant">atau klik area ini untuk memilih dari perangkat</p>
+
+              <span class="btn-primary pointer-events-none mt-4 !px-5 !py-2.5 !text-label-md">
+                <span class="icon text-[18px]">folder_open</span>
+                <span>Pilih File</span>
+              </span>
+
+              <p class="mt-4 inline-flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+                <span class="icon text-[16px] text-border-gray">info</span>
+                JPG, JPEG, PNG • maks 10 MB
+              </p>
+            </div>
+
+            <!-- tips -->
+            <div class="mt-4 flex items-start gap-3 rounded-xl bg-surface-container-low p-3.5">
+              <span class="grid h-8 w-8 flex-none place-items-center rounded-lg bg-peach-orange/25 text-tertiary">
+                <span class="icon text-[20px]">lightbulb</span>
+              </span>
+              <div>
+                <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Supaya hasil lebih stabil</p>
+                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+                  Satu buah di tengah frame, latar polos, dan cahaya merata. Hindari bayangan keras atau objek lain yang menutupi buah.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- factual info -->
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-3" data-reveal-group>
+            <div data-reveal class="panel px-4 py-3.5">
+              <span class="font-label-sm text-label-sm text-on-surface-variant">Input model</span>
+              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">128 × 128</p>
+            </div>
+            <div data-reveal class="panel px-4 py-3.5">
+              <span class="font-label-sm text-label-sm text-on-surface-variant">Objek</span>
+              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">1 buah</p>
+            </div>
+            <div data-reveal class="panel px-4 py-3.5">
+              <span class="font-label-sm text-label-sm text-on-surface-variant">Keluaran</span>
+              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">Jenis + status</p>
+            </div>
+          </div>
+
+          <!-- demo -->
+          <div class="panel p-5" data-reveal data-demo-only>
+            <div class="flex items-start gap-3">
+              <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-tertiary-fixed text-tertiary-container">
+                <span class="icon text-[20px]">science</span>
+              </span>
+              <div class="flex-1">
+                <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Belum punya foto? Coba skenario demo</p>
+                <p class="mt-0.5 font-body-sm text-body-sm text-on-surface-variant">
+                  Memakai gambar contoh dan hasil simulasi. Berguna untuk menguji alur tanpa model.
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="fresh" data-fruit="apple">
+                    <span class="icon text-[16px] text-leaf-green">check_circle</span> Contoh segar
+                  </button>
+                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="rotten" data-fruit="banana">
+                    <span class="icon text-[16px] text-error">warning</span> Contoh busuk
+                  </button>
+                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="error" data-fruit="orange">
+                    <span class="icon text-[16px] text-tertiary">error</span> Simulasi gagal
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT -->
+        <section class="flex flex-col gap-4 lg:col-span-6 lg:sticky lg:top-[88px]" aria-labelledby="step-preview">
+          <div id="preview-card" class="panel p-5 sm:p-6" data-reveal>
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="grid h-8 w-8 flex-none place-items-center rounded-full bg-secondary-container font-headline-sm text-[13px] font-bold text-on-secondary-container">2</span>
+                <div>
+                  <h2 id="step-preview" class="font-headline-sm text-headline-sm text-forest-green">Pratinjau &amp; konfirmasi</h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Pastikan buah terlihat jelas sebelum dianalisis</p>
+                </div>
+              </div>
+              <span id="upload-status" class="chip chip-neutral whitespace-nowrap">
+                <span class="dot"></span> Menunggu gambar
+              </span>
+            </div>
+
+            <!-- empty -->
+            <div id="preview-empty" class="mt-5 flex flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant/60 bg-surface-container-low/60 px-6 py-10 text-center">
+              <div class="relative mb-5 h-[104px] w-[128px]">
+                <div class="empty-frame absolute inset-0"></div>
+                <span data-mascot="orange" data-size="62" class="mascot-bob delay-1 absolute -bottom-5 -right-3" aria-hidden="true"></span>
+              </div>
+              <p class="font-label-lg text-label-lg text-soft-charcoal">Belum ada gambar terpilih</p>
+              <p class="mt-1 max-w-xs font-body-sm text-body-sm text-on-surface-variant">
+                Setelah kamu memilih foto, pratinjau dan tombol Analyze Fruit akan muncul di sini.
+              </p>
+            </div>
+
+            <!-- filled -->
+            <div id="preview-filled" class="mt-5 is-hidden" hidden>
+              <div class="preview-media relative aspect-[4/3] overflow-hidden rounded-2xl bg-light-gray shadow-inner is-shown">
+                <img id="preview-image" alt="Pratinjau foto buah" class="h-full w-full object-cover" />
+                <div id="preview-scan" class="scan-frame pointer-events-none absolute inset-0 is-hidden" aria-hidden="true"></div>
+
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/75 via-black/25 to-transparent p-4">
+                  <div class="min-w-0">
+                    <p id="file-name" class="truncate font-label-md text-label-md font-semibold text-white">—</p>
+                    <p id="file-meta" class="font-body-sm text-body-sm text-white/75">—</p>
+                  </div>
+                  <span class="chip !bg-forest-green/90 !text-white backdrop-blur">
+                    <span class="icon text-[14px]">center_focus_strong</span> Fokus
+                  </span>
+                </div>
+              </div>
+
+              <div class="mt-3 flex flex-col gap-3 rounded-xl bg-surface-container-low p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex min-w-0 items-center gap-3">
+                  <span class="grid h-10 w-10 flex-none place-items-center rounded-lg bg-surface-container text-forest-green">
+                    <span class="icon text-[22px]">image</span>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Gambar siap dianalisis</p>
+                    <p class="truncate font-body-sm text-body-sm text-on-surface-variant">Resolusi <span id="file-dims">—</span> px</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button id="btn-replace" type="button" class="btn-ghost !py-1.5 !text-label-sm">
+                    <span class="icon text-[16px]">cached</span> Ganti
+                  </button>
+                  <button id="btn-remove" type="button" class="btn-ghost !py-1.5 !text-label-sm !text-error hover:!bg-error-container/40">
+                    <span class="icon text-[16px]">delete</span> Hapus
+                  </button>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <button id="analyze-btn" type="button" class="btn-primary w-full" disabled aria-disabled="true">
+                  <span class="icon text-[22px]">auto_awesome</span>
+                  <span>Analyze Fruit</span>
+                </button>
+                <p id="analyze-hint" class="mt-2 text-center font-body-sm text-body-sm text-on-surface-variant">
+                  Pilih gambar terlebih dahulu untuk mengaktifkan analisis.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- processing -->
+          <div id="processing" class="panel is-hidden p-5 sm:p-6" hidden aria-live="polite">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="orbit" aria-hidden="true">
+                  <span class="orbit-item"><span data-mascot="apple" data-size="22"></span></span>
+                  <span class="orbit-item"><span data-mascot="orange" data-size="22"></span></span>
+                  <span class="orbit-item"><span data-mascot="banana" data-size="22"></span></span>
+                </div>
+                <div>
+                  <p class="font-label-lg text-label-lg text-soft-charcoal">Sedang menganalisis…</p>
+                  <p id="progress-label" class="font-body-sm text-body-sm text-on-surface-variant">Menyiapkan citra…</p>
+                </div>
+              </div>
+              <span id="progress-pct" class="font-headline-sm text-headline-sm font-bold text-forest-green">0%</span>
+            </div>
+
+            <div class="progress-track mt-4 h-2.5">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <div id="stage-list" class="mt-4 grid gap-2.5 sm:grid-cols-2">
+              <div data-stage class="stage-item">
+                <span class="stage-icon">1</span>
+                <span class="font-body-sm text-body-sm">Validasi format &amp; keterbacaan</span>
+              </div>
+              <div data-stage class="stage-item">
+                <span class="stage-icon">2</span>
+                <span class="font-body-sm text-body-sm">Preprocessing 128 × 128 RGB</span>
+              </div>
+              <div data-stage class="stage-item">
+                <span class="stage-icon">3</span>
+                <span class="font-body-sm text-body-sm">Inferensi CNN</span>
+              </div>
+              <div data-stage class="stage-item">
+                <span class="stage-icon">4</span>
+                <span class="font-body-sm text-body-sm">Menghitung confidence</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- error -->
+          <div id="error-panel" class="is-hidden rounded-2xl border border-error/25 bg-error-container/40 p-5" hidden role="alert">
+            <div class="flex items-start gap-3">
+              <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-error text-on-error">
+                <span class="icon text-[20px]">error</span>
+              </span>
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <p class="font-label-lg text-label-lg text-on-error-container">Analisis gagal</p>
+                  <span id="error-code" class="chip !bg-error/10 !px-2 !py-0.5 !text-[10px] !font-semibold uppercase !tracking-wider !text-on-error-container">ERROR</span>
+                </div>
+                <p id="error-message" class="mt-1 font-body-sm text-body-sm leading-relaxed text-on-error-container/85">
+                  Terjadi kesalahan saat memproses gambar.
+                </p>
+                <button id="error-retry" type="button" class="btn-secondary mt-3 !px-3.5 !py-2 !text-label-sm">
+                  <span class="icon text-[16px]">refresh</span> Coba lagi
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel p-5" data-reveal>
+            <div class="flex items-start gap-3">
+              <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-secondary-container text-forest-green">
+                <span class="icon text-[20px]">psychology</span>
+              </span>
+              <div>
+                <h3 class="font-label-lg text-label-lg font-semibold text-soft-charcoal">Apa yang dinilai model</h3>
+                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+                  Model membaca pola visual dari citra 128 × 128 — bukan rasa atau aroma buah.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 grid grid-cols-3 gap-2">
+              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+                <span class="icon text-[22px] text-strawberry-red">palette</span>
+                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Warna</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant">Perubahan pigmen</p>
+              </div>
+              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+                <span class="icon text-[22px] text-tertiary">texture</span>
+                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Tekstur</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant">Kerutan &amp; bercak</p>
+              </div>
+              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+                <span class="icon text-[22px] text-forest-green">category</span>
+                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Bentuk</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant">Siluet buah</p>
+              </div>
+            </div>
+
+            <p class="mt-3 flex items-start gap-1.5 font-body-sm text-[11px] leading-relaxed text-on-surface-variant">
+              <span class="icon mt-0.5 text-[14px] text-border-gray">info</span>
+              Model tidak mengukur rasa, aroma, atau kandungan gizi. Hasil tetap perlu dicek secara fisik.
+            </p>
+          </div>
+
+          <div class="flex items-start gap-2.5 px-1" data-reveal>
+            <span class="icon mt-0.5 text-[18px] text-leaf-green">verified_user</span>
+            <p class="font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+              Hasil disimpan sementara di tab ini saja. Menutup tab atau menekan <strong class="font-medium text-soft-charcoal">Scan Another Fruit</strong> akan menghapusnya.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER (ringkas) ================= -->
+  <footer class="border-t border-black/[0.05] bg-surface-container-low pb-24 pt-6 md:pb-6">
+    <div class="shell flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 FruGrade. Proyek akademik — hasil prediksi bukan jaminan kualitas.</p>
+      <a href="index.html" class="font-label-sm text-label-sm text-forest-green hover:underline">Kembali ke Home</a>
+    </div>
+  </footer>
+
+  <!-- ================= MOBILE NAV ================= -->
+  <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-warm-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Navigasi bawah">
+    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-6">
+      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-on-surface-variant">
+        <span class="icon text-[24px]">home</span>
+        <span>Home</span>
+      </a>
+      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-strawberry-red" aria-current="page">
+        <span class="icon text-[24px]">document_scanner</span>
+        <span>Scan</span>
+      </a>
+    </div>
+  </nav>
+
+  <script defer src="assets/vendor/gsap.min.js"></script>
+  <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/store.js"></script>
+  <script defer src="assets/js/api.js"></script>
+  <script defer src="assets/js/motion.js"></script>
+  <script defer src="assets/js/fruit-friends.js"></script>
+  <script defer src="assets/js/upload.js"></script>
+</body>
+</html>

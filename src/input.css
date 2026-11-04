@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-on-surface antialiased;
+    font-family: Inter, system-ui, sans-serif;
+    text-rendering: optimizeLegibility;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+  footer {
+    flex-shrink: 0;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: Poppins, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background: #f4515533;
+    color: #2e5d3a;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2e5d3a;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  /* Slim scrollbar (mockup hides it; keep it discoverable but quiet) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d9d5cd transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #d9d5cd;
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8;
+  }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl font-label-lg text-label-lg transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-primary {
+    @apply btn overflow-hidden bg-strawberry-red px-7 py-3.5 text-on-primary shadow-md;
+  }
+  .btn-primary:hover {
+    @apply bg-primary-container shadow-lift;
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.985);
+  }
+  .btn-primary[disabled],
+  .btn-primary[aria-disabled='true'] {
+    @apply cursor-not-allowed bg-surface-dim text-on-surface-variant shadow-none;
+    transform: none;
+  }
+
+  .btn-secondary {
+    @apply btn border border-outline-variant/60 bg-surface-container-lowest px-6 py-3 text-soft-charcoal shadow-soft;
+  }
+  .btn-secondary:hover {
+    @apply border-outline-variant bg-surface-container-low shadow-card;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    @apply btn px-4 py-2 text-on-surface-variant;
+  }
+  .btn-ghost:hover {
+    @apply bg-surface-container text-soft-charcoal;
+  }
+
+  /* ---------- surfaces ---------- */
+  .panel {
+    @apply rounded-2xl bg-surface-container-lowest shadow-soft ring-1 ring-black/[0.03];
+  }
+
+  .panel-flat {
+    @apply rounded-2xl bg-surface-container-low;
+  }
+
+  /* ---------- nav ---------- */
+  .nav-link {
+    @apply relative rounded-lg px-4 py-2 font-label-md text-label-md text-on-surface-variant transition-colors duration-200;
+  }
+  .nav-link:hover {
+    @apply bg-surface-container text-soft-charcoal;
+  }
+  .nav-link.is-active {
+    @apply bg-secondary-container font-semibold text-on-secondary-container;
+  }
+  .nav-link.is-active::after {
+    content: '';
+    @apply absolute inset-x-4 -bottom-px h-px bg-on-secondary-container/30;
+  }
+
+  /* ---------- chips ---------- */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-label-sm text-label-sm;
+  }
+  .chip-fresh {
+    @apply bg-secondary-container font-semibold text-on-secondary-container;
+  }
+  .chip-rotten {
+    @apply bg-error-container font-semibold text-on-error-container;
+  }
+  .chip-demo {
+    @apply bg-tertiary-fixed/70 font-medium text-on-tertiary-fixed-variant;
+  }
+  .chip-neutral {
+    @apply bg-surface-container font-medium text-on-surface-variant;
+  }
+
+  .dot {
+    @apply inline-block h-2 w-2 rounded-full bg-current;
+  }
+
+  /* ---------- misc ---------- */
+  .icon {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hairline {
+    @apply border-t border-black/[0.06];
+  }
+
+  .meta-row {
+    @apply flex items-center justify-between gap-3 py-1.5 font-label-sm text-label-sm text-on-surface-variant;
+  }
+
+  .section-label {
+    @apply font-label-sm text-label-sm font-semibold uppercase tracking-[0.14em] text-strawberry-red;
+  }
+
+  .skip-link {
+    @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-forest-green px-4 py-2 font-label-md text-label-md text-white shadow-lg transition-transform;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+}

@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hasil Analisis — FruGrade</title>
+  <meta name="description" content="Hasil prediksi FruGrade: jenis buah, status kesegaran, dan confidence score dari model CNN." />
+  <meta name="theme-color" content="#2E5D3A" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="stylesheet" href="assets/css/fonts.css" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/fruit.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface" data-page="result">
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+
+  <!-- ================= HEADER ================= -->
+  <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-warm-white/85 backdrop-blur-md">
+    <div class="shell flex h-[72px] items-center justify-between gap-4">
+      <a href="index.html" class="group flex items-center gap-2.5" aria-label="FruGrade — kembali ke Home">
+        <img src="assets/img/logo-mark.png" alt="" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:-rotate-3" width="50" height="94" />
+        <span class="font-headline-sm text-headline-sm tracking-tight text-forest-green">FruGrade</span>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-link" data-nav="home">Home</a>
+        <a href="upload.html" class="nav-link" data-nav="scan">Scan / Upload</a>
+        <a href="index.html#how-it-works" class="nav-link" data-nav="how">Cara Kerja</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <span id="result-demo-badge" class="chip chip-demo" hidden>
+          <span class="icon text-[15px]">science</span>
+          <span>Mode demo</span>
+        </span>
+        <a href="upload.html" class="btn-secondary !px-3.5 !py-2 !text-label-md">
+          <span class="icon text-[18px]">refresh</span>
+          <span class="hidden sm:inline">Scan lagi</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="relative overflow-hidden pb-24 pt-[72px] md:pb-16">
+    <div class="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-strawberry-red/5 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -right-24 top-1/2 h-80 w-80 rounded-full bg-leaf-green/10 blur-3xl" aria-hidden="true"></div>
+
+    <div class="shell relative py-7 sm:py-9">
+      <!-- breadcrumb -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <nav class="flex flex-wrap items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant" aria-label="Breadcrumb">
+          <a href="index.html" class="inline-flex items-center gap-1 transition-colors hover:text-soft-charcoal">
+            <span class="icon text-[16px]">home</span> Home
+          </a>
+          <span class="icon text-[14px] text-outline-variant">chevron_right</span>
+          <a href="upload.html" class="inline-flex items-center gap-1 transition-colors hover:text-soft-charcoal">
+            <span class="icon text-[16px]">document_scanner</span> Deteksi kualitas
+          </a>
+          <span class="icon text-[14px] text-outline-variant">chevron_right</span>
+          <span class="font-label-md text-label-md text-forest-green">Hasil analisis</span>
+        </nav>
+
+        <span id="session-chip" class="hidden items-center gap-2 rounded-full bg-surface-container px-3 py-1.5 sm:inline-flex">
+          <span class="pulse-dot h-2 w-2 rounded-full bg-forest-green text-forest-green"></span>
+          <span class="font-label-sm text-label-sm text-forest-green">Sesi analisis aktif</span>
+        </span>
+      </div>
+
+      <!-- ================= EMPTY STATE ================= -->
+      <div id="result-empty" class="is-hidden mx-auto mt-14 max-w-lg" hidden>
+        <div class="panel flex flex-col items-center p-8 text-center">
+          <span data-mascot="orange" data-size="96" class="mascot-bob" aria-hidden="true"></span>
+          <h1 class="mt-4 font-headline-md text-headline-md font-bold text-soft-charcoal">Belum ada hasil untuk ditampilkan</h1>
+          <p class="mt-2 max-w-sm font-body-md text-body-md text-on-surface-variant">
+            Hasil hanya tersedia setelah kamu menjalankan analisis. Unggah foto buah terlebih dahulu.
+          </p>
+          <a href="upload.html" class="btn-primary mt-5">
+            <span class="icon text-[20px]">add_photo_alternate</span>
+            <span>Pilih gambar buah</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ================= RESULT CONTENT ================= -->
+      <div id="result-content" class="is-hidden mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-12 lg:gap-6" hidden>
+        <!-- LEFT -->
+        <section class="flex flex-col gap-4 lg:col-span-5" aria-label="Gambar yang dianalisis">
+          <div class="panel p-5 sm:p-6" data-reveal>
+            <div class="flex items-center justify-between gap-3">
+              <span class="chip chip-neutral">
+                <span class="icon text-[16px] text-strawberry-red">photo_camera</span>
+                Gambar yang dianalisis
+              </span>
+              <span id="result-id" class="font-label-sm text-label-sm text-on-surface-variant">#FRU-00000</span>
+            </div>
+
+            <div class="relative mt-4 aspect-[4/3] overflow-hidden rounded-xl bg-light-gray lg:aspect-square">
+              <img id="result-image" alt="Foto buah yang dianalisis" class="h-full w-full object-cover transition-transform duration-700 hover:scale-105" />
+              <span class="scan-corner tl !border-white/70"></span>
+              <span class="scan-corner br !border-white/70"></span>
+
+              <div class="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2">
+                <span class="inline-flex items-center gap-1.5 rounded-lg bg-warm-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
+                  <span id="focus-icon" class="icon text-[16px] text-forest-green">verified</span>
+                  <span id="focus-badge" class="font-label-sm text-label-sm font-semibold text-forest-green">Kualitas visual baik</span>
+                </span>
+                <span id="result-demo-badge-inline" class="chip chip-demo !bg-warm-white/90 !text-[10px] backdrop-blur" hidden>
+                  <span class="icon text-[13px]">science</span> demo
+                </span>
+              </div>
+            </div>
+
+            <!-- model meta -->
+            <div class="mt-4 rounded-xl bg-surface-container-low p-3.5">
+              <div class="meta-row">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="icon text-[16px]">memory</span> Arsitektur
+                </span>
+                <span id="meta-model" class="font-medium text-soft-charcoal">Custom CNN</span>
+              </div>
+              <div class="meta-row">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="icon text-[16px]">grid_view</span> Input
+                </span>
+                <span id="meta-input" class="font-medium text-soft-charcoal">128 × 128</span>
+              </div>
+              <div id="meta-latency-row" class="meta-row" hidden>
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="icon text-[16px]">timer</span> Waktu proses
+                </span>
+                <span id="meta-latency" class="font-medium text-soft-charcoal">—</span>
+              </div>
+            </div>
+
+            <p class="mt-3 hidden items-start gap-1.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant lg:flex">
+              <span class="icon mt-0.5 text-[15px] text-border-gray">info</span>
+              Confidence bukan akurasi keseluruhan model. Angka ditampilkan hanya jika model menyediakannya.
+            </p>
+          </div>
+        </section>
+
+        <!-- RIGHT -->
+        <section class="flex flex-col gap-4 lg:col-span-7" aria-label="Detail hasil prediksi">
+          <div class="panel overflow-hidden p-5 sm:p-7">
+            <!-- status -->
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-2 rounded-full bg-secondary-container px-3 py-1.5 text-on-secondary-container">
+                <span class="h-2 w-2 rounded-full bg-forest-green"></span>
+                <span class="font-label-sm text-[11px] font-semibold uppercase tracking-wide">Status: terdeteksi</span>
+              </span>
+              <span id="result-time" class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+                <span class="icon text-[16px]">calendar_today</span> —
+              </span>
+            </div>
+
+            <!-- title -->
+            <div class="mt-5">
+              <p class="font-label-sm text-label-sm font-semibold uppercase tracking-[0.14em] text-on-surface-variant">Klasifikasi buah</p>
+              <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h1 id="fruit-name" class="font-headline-lg text-[30px] font-bold leading-tight tracking-tight text-soft-charcoal sm:text-[38px]">—</h1>
+                <span id="fruit-latin" class="font-label-md text-label-md font-medium text-leaf-green"></span>
+              </div>
+              <p class="mt-2 max-w-xl font-body-md text-body-md text-on-surface-variant">
+                Kelas diprediksi dari pola visual gambar yang diunggah. Cocokkan kembali dengan kondisi fisik buah.
+              </p>
+            </div>
+
+            <!-- freshness -->
+            <div id="freshness-card" class="mt-5 rounded-xl bg-surface-container-low p-4 sm:p-5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-label-sm text-label-sm font-semibold uppercase tracking-[0.12em] text-on-surface-variant">Tingkat kesegaran</span>
+                <span id="freshness-chip" class="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-4 py-1.5 font-label-md text-label-md text-on-surface-variant shadow-sm">
+                  <span class="icon text-[18px]">help</span> —
+                </span>
+              </div>
+
+              <div class="mt-3 flex items-start gap-3 rounded-lg bg-surface-container-lowest p-3.5 shadow-sm">
+                <div class="relative flex-none">
+                  <span class="grid h-10 w-10 place-items-center rounded-lg bg-secondary-container text-forest-green">
+                    <span id="freshness-icon" class="icon text-[24px]">task_alt</span>
+                  </span>
+                  <span data-mascot="apple" data-size="44" id="result-mascot" class="mascot-bob absolute -bottom-6 -left-5" aria-hidden="true"></span>
+                </div>
+                <div>
+                  <h2 id="freshness-headline" class="font-label-lg text-label-lg font-bold text-forest-green">—</h2>
+                  <p id="freshness-note" class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-soft-charcoal/90">—</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- confidence -->
+            <div id="confidence-block" class="mt-4 rounded-xl bg-surface-container p-4 sm:p-5">
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Confidence score</p>
+                  <p class="mt-0.5 max-w-[240px] font-body-sm text-body-sm text-on-surface-variant">
+                    Probabilitas softmax — bukan akurasi model.
+                  </p>
+                </div>
+
+                <div class="relative h-[116px] w-[116px] flex-none self-center sm:self-auto">
+                  <svg viewBox="0 0 120 120" class="h-full w-full" aria-hidden="true">
+                    <circle class="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="9" />
+                    <circle id="confidence-ring" class="ring-value" cx="60" cy="60" r="52" fill="none" stroke="#2E5D3A" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+                  </svg>
+                  <div class="absolute inset-0 grid place-items-center">
+                    <span id="confidence-value" class="font-headline-md text-[22px] font-bold text-forest-green">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- probabilities -->
+              <div id="prob-list" class="mt-4 grid gap-3"></div>
+              <p id="confidence-note" class="mt-3 font-body-sm text-body-sm text-on-surface-variant" hidden></p>
+            </div>
+
+            <!-- actions -->
+            <div class="mt-5 flex flex-col gap-2.5 sm:flex-row">
+              <button id="btn-another" type="button" class="btn-primary flex-1">
+                <span class="icon text-[20px]">refresh</span>
+                <span>Scan Another Fruit</span>
+              </button>
+              <button id="btn-copy" type="button" class="btn-secondary">
+                <span class="icon text-[20px]">content_copy</span>
+                <span>Salin ringkasan</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-xl bg-surface-container-low p-4" data-reveal>
+            <div class="flex items-start gap-3">
+              <span class="icon mt-0.5 flex-none text-[24px] text-leaf-green">verified_user</span>
+              <div>
+                <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Catatan penggunaan</p>
+                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+                  Hasil ini keluaran model pada satu gambar, bukan diagnosis atau jaminan kualitas pangan. Untuk keputusan
+                  distribusi, tetap lakukan pemeriksaan fisik. Riwayat tidak disimpan pada MVP ini.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <p id="result-summary" class="sr-only" aria-hidden="true"></p>
+
+      <noscript>
+        <div class="panel mt-8 p-6">
+          <p class="font-body-md text-body-md text-soft-charcoal">
+            Halaman hasil membutuhkan JavaScript. Aktifkan JavaScript lalu ulangi analisis dari halaman Upload.
+          </p>
+        </div>
+      </noscript>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER (ringkas) ================= -->
+  <footer class="border-t border-black/[0.05] bg-surface-container-low pb-24 pt-6 md:pb-6">
+    <div class="shell flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 FruGrade. Proyek akademik — hasil prediksi bukan jaminan kualitas.</p>
+      <a href="index.html" class="font-label-sm text-label-sm text-forest-green hover:underline">Kembali ke Home</a>
+    </div>
+  </footer>
+
+  <!-- ================= MOBILE NAV ================= -->
+  <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-warm-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Navigasi bawah">
+    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-6">
+      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-on-surface-variant">
+        <span class="icon text-[24px]">home</span>
+        <span>Home</span>
+      </a>
+      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-strawberry-red" aria-current="page">
+        <span class="icon text-[24px]">document_scanner</span>
+        <span>Scan</span>
+      </a>
+    </div>
+  </nav>
+
+  <script defer src="assets/vendor/gsap.min.js"></script>
+  <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/store.js"></script>
+  <script defer src="assets/js/api.js"></script>
+  <script defer src="assets/js/motion.js"></script>
+  <script defer src="assets/js/fruit-friends.js"></script>
+  <script defer src="assets/js/result.js"></script>
+</body>
+</html>
