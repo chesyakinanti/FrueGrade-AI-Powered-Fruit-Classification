@@ -1,45 +1,57 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>FruGrade — Deteksi Kualitas &amp; Kesegaran Buah</title>
   <meta name="description" content="FruGrade memakai model CNN untuk memperkirakan jenis buah dan status kesegaran dari satu foto. Unggah gambar, lihat hasilnya dalam hitungan detik." />
   <meta name="theme-color" content="#2E5D3A" />
-  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=9" />
 
-  <link rel="stylesheet" href="assets/css/fonts.css" />
-  <link rel="stylesheet" href="assets/css/app.css" />
-  <link rel="stylesheet" href="assets/css/animations.css" />
-  <link rel="stylesheet" href="assets/css/fruit.css" />
+  <link rel="stylesheet" href="assets/css/fonts.css?v=9" />
+  <link rel="stylesheet" href="assets/css/app.css?v=9" />
+  <link rel="stylesheet" href="assets/css/animations.css?v=9" />
+  <link rel="stylesheet" href="assets/css/fruit.css?v=9" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 
 <body class="bg-surface font-body-md text-on-surface" data-page="home">
-  <a class="skip-link" href="#main">Lewati ke konten</a>
+  <a class="skip-link" href="#main" data-i18n="nav.skip">Lewati ke konten</a>
 
   <!-- ================= HEADER ================= -->
   <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-warm-white/85 backdrop-blur-md">
-    <div class="shell flex h-[72px] items-center justify-between gap-4">
-      <a href="index.html" class="group flex items-center gap-2.5" aria-label="FruGrade — kembali ke Home">
-        <img src="assets/img/logo-mark.png" alt="" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:-rotate-3" width="50" height="94" />
-        <span class="font-headline-sm text-headline-sm tracking-tight text-forest-green">FruGrade</span>
-      </a>
+    <div class="shell relative flex h-[72px] items-center justify-between gap-4">
+      <div class="flex items-center flex-none">
+        <a href="index.html" class="group flex items-center py-1" aria-label="FruGrade — kembali ke Home">
+          <img src="assets/img/logo-horizontal.png" alt="FruGrade" class="h-9 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+        </a>
+      </div>
 
-      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
-        <a href="index.html" class="nav-link" data-nav="home">Home</a>
-        <a href="upload.html" class="nav-link" data-nav="scan">Scan / Upload</a>
-        <a href="#how-it-works" class="nav-link" data-nav="how">Cara Kerja</a>
+      <!-- Mathematically Centered Navigation -->
+      <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1.5" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-link is-active" data-nav="home" data-i18n="nav.home">Beranda</a>
+        <a href="upload.html" class="nav-link" data-nav="scan" data-i18n="nav.scan">Pindai</a>
+        <a href="#how-it-works" class="nav-link" data-nav="how" data-i18n="nav.how">Cara Kerja</a>
+        <a href="#fun-fact" class="nav-link" data-nav="facts" data-i18n="nav.facts">Fakta Buah</a>
       </nav>
 
-      <div class="flex items-center gap-2.5">
-        <span class="chip chip-demo hidden sm:inline-flex" title="Mode pengembangan: prediksi disimulasikan di browser">
+      <div class="flex items-center gap-2 sm:gap-2.5 flex-none">
+        <!-- Language Switcher ID | EN -->
+        <div class="inline-flex items-center rounded-full bg-surface-container-low p-1 ring-1 ring-black/[0.05]" role="group" aria-label="Language selection">
+          <button type="button" data-lang-btn="id" class="lang-btn active rounded-full px-2.5 py-1 text-label-sm font-bold bg-surface-container-lowest text-forest-green shadow-soft transition-all duration-200" aria-pressed="true">ID</button>
+          <button type="button" data-lang-btn="en" class="lang-btn rounded-full px-2.5 py-1 text-label-sm font-medium text-on-surface-variant hover:text-soft-charcoal transition-all duration-200" aria-pressed="false">EN</button>
+        </div>
+
+        <span class="chip chip-demo hidden lg:inline-flex" data-i18n-title="common.demoTooltip" title="Mode pengembangan: prediksi disimulasikan di browser">
           <span class="icon text-[15px]">science</span>
-          <span data-mode-label>Mode demo</span>
+          <span data-mode-label data-i18n="common.demoMode">Mode demo</span>
         </span>
-        <a href="upload.html" class="btn-primary !px-4 !py-2 !text-label-md md:!px-6 md:!py-2.5">
+        <a href="upload.html" class="btn-primary !px-4 !py-2 !text-label-md md:!px-5 md:!py-2.5">
           <span class="icon text-[18px]">document_scanner</span>
-          <span>Scan</span>
+          <span data-i18n="nav.scan">Pindai</span>
         </a>
       </div>
     </div>
@@ -48,87 +60,56 @@
   <main id="main" class="pt-[72px]">
     <!-- ================= HERO ================= -->
     <section class="relative overflow-hidden" data-hero data-parallax-scope>
-      <!-- ambient -->
+      <!-- ambient background glow -->
       <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <div class="drift absolute -right-28 -top-40 h-[560px] w-[560px] rounded-full bg-gradient-to-br from-peach-orange/20 via-sunny-yellow/10 to-transparent blur-3xl"></div>
         <div class="drift absolute -left-40 top-1/3 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-secondary-container/50 via-surface-container-low/30 to-transparent blur-3xl" style="animation-delay:-7s"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,rgba(255,201,67,0.08),transparent_45%)]"></div>
       </div>
 
-      <div class="shell grid grid-cols-1 items-center gap-12 py-10 sm:py-14 lg:grid-cols-12 lg:gap-10 lg:py-16">
-        <!-- copy -->
-        <div class="flex flex-col items-start lg:col-span-7">
-          <div data-hero-item class="inline-flex items-center gap-2 rounded-full bg-secondary-fixed px-4 py-1.5 shadow-sm">
+      <div class="shell grid grid-cols-1 items-center gap-10 py-10 sm:py-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-6 lg:py-16">
+        <!-- 1. Copy (Title, desc, CTA buttons) -->
+        <div class="order-1 flex flex-col items-start lg:col-span-7 lg:col-start-1 lg:row-start-1">
+          <div data-hero-item class="inline-flex items-center gap-2 rounded-full border border-forest-green/15 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur-md">
             <span class="icon text-[18px] text-forest-green" style="font-variation-settings:'FILL' 1">eco</span>
-            <span class="font-label-sm text-label-sm font-semibold uppercase tracking-wide">AI-Powered Fruit Classification</span>
+            <span class="font-label-sm text-label-sm font-semibold uppercase tracking-wide text-forest-green" data-i18n="hero.badge">AI-Powered Fruit Classification</span>
           </div>
 
           <h1 data-hero-item class="mt-5 font-headline-lg text-[34px] font-bold leading-[1.12] tracking-tight text-forest-green sm:text-[42px] lg:text-[46px] lg:leading-[1.1]">
-            <span class="split-line"><span>Deteksi Kualitas &amp;</span></span>
-            <span class="split-line"><span>Kesegaran Buah</span></span>
-            <span class="split-line"><span class="text-strawberry-red">Cepat &amp; Praktis</span></span>
+            <span class="split-line"><span data-i18n="hero.title1">Deteksi Kualitas &amp;</span></span>
+            <span class="split-line"><span data-i18n="hero.title2">Kesegaran Buah</span></span>
+            <span class="split-line"><span class="text-strawberry-red" data-i18n="hero.title3">Cepat &amp; Praktis</span></span>
           </h1>
 
-          <p data-hero-item class="mt-5 max-w-xl font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
-            FruGrade memakai model <strong class="font-semibold text-on-surface">CNN PyTorch</strong> untuk memperkirakan
-            jenis buah dan status kesegarannya dari satu foto. Tanpa akun, tanpa riwayat — cukup unggah gambar.
+          <p data-hero-item class="mt-5 max-w-xl font-body-lg text-body-lg leading-relaxed text-on-surface-variant" data-i18n="hero.desc" data-i18n-html>
+            FruGrade memakai model <strong class="font-semibold text-on-surface">CNN TensorFlow / Keras</strong> untuk memperkirakan
+            jenis buah dan status kesegarannya dari satu foto. Tanpa akun, tanpa riwayat — cukup unggah atau potret gambar.
           </p>
 
-          <div data-hero-item class="mt-7 flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <div data-hero-item class="mt-7 flex w-full flex-col items-start gap-3 sm:flex-row sm:items-center">
             <a href="upload.html" class="btn-primary w-full sm:w-auto" data-magnetic="8">
               <span class="icon text-[20px]">document_scanner</span>
-              <span>Start Scanning</span>
+              <span data-i18n="common.startScanning">Mulai Analisis</span>
               <span class="icon text-[18px] transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
             </a>
-            <a href="#how-it-works" class="group inline-flex items-center gap-2 rounded-xl px-1 py-2 font-label-md text-label-md text-forest-green transition-colors hover:text-soft-charcoal">
-              <span class="icon text-[20px] transition-transform duration-300 group-hover:translate-y-0.5">south</span>
-              <span>Lihat cara kerjanya</span>
+            <a href="#how-it-works" class="group inline-flex items-center gap-2 rounded-full border border-forest-green/20 bg-warm-white/90 px-4 py-2.5 font-label-md text-label-md font-semibold text-forest-green shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-forest-green/40 hover:bg-forest-green/10 hover:shadow-card">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-forest-green/10 text-forest-green transition-transform duration-300 group-hover:translate-y-0.5">
+                <span class="icon text-[15px]">south</span>
+              </span>
+              <span data-i18n="hero.howItWorks">Lihat cara kerjanya</span>
             </a>
-          </div>
-
-          <div data-hero-item class="mt-6 flex flex-wrap items-center gap-2.5">
-            <span class="chip chip-neutral">
-              <span class="icon text-[16px] text-leaf-green">verified</span>
-              Custom CNN • PyTorch
-            </span>
-            <span class="chip chip-neutral">
-              <span class="icon text-[16px] text-tertiary">grid_view</span>
-              Input 128 × 128
-            </span>
-            <span class="chip chip-neutral">
-              <span class="icon text-[16px] text-strawberry-red">photo_camera</span>
-              Upload dari perangkat
-            </span>
-          </div>
-
-          <!-- metrics -->
-          <div class="mt-8 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
-            <div data-hero-item class="panel px-4 py-3.5">
-              <p class="font-headline-md text-headline-md font-bold text-forest-green">1</p>
-              <p class="font-body-sm text-body-sm text-on-surface-variant">Foto per analisis</p>
-            </div>
-            <div data-hero-item class="panel px-4 py-3.5">
-              <p class="font-headline-md text-headline-md font-bold text-tertiary-container">
-                <span data-count-to="128">128</span><span class="text-[16px] font-semibold">×128</span>
-              </p>
-              <p class="font-body-sm text-body-sm text-on-surface-variant">Resolusi input model</p>
-            </div>
-            <div data-hero-item class="panel px-4 py-3.5">
-              <p class="font-headline-md text-headline-md font-bold text-secondary">Fresh / Rotten</p>
-              <p class="font-body-sm text-body-sm text-on-surface-variant">Kelas kesegaran</p>
-            </div>
           </div>
         </div>
 
-        <!-- visual -->
-        <div class="relative lg:col-span-5">
+        <!-- 2. Visual Preview (On mobile: shown right after copy/buttons; on desktop: sits on the right across both rows) -->
+        <div class="order-2 relative w-full lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 lg:self-center" data-hero-item>
           <div class="relative mx-auto w-full max-w-[440px]" data-parallax="-26">
-            <!-- mascots -->
-            <span data-mascot="apple" data-size="86" data-hero-float class="mascot-peek mascot-peek--left mascot-bob" aria-hidden="true"></span>
-            <span data-mascot="orange" data-size="62" data-hero-float class="mascot-peek mascot-peek--right mascot-bob delay-1" aria-hidden="true"></span>
+            <!-- mascots peeking playfully -->
+            <span data-mascot="apple" data-size="88" data-hero-float class="mascot-peek mascot-peek--left mascot-bob" aria-hidden="true"></span>
+            <span data-mascot="orange" data-size="64" data-hero-float class="mascot-peek mascot-peek--right mascot-bob delay-1" aria-hidden="true"></span>
 
-            <div class="panel overflow-hidden p-3" data-tilt="4">
-              <div class="scan-frame relative h-[320px] overflow-hidden rounded-xl bg-surface-container sm:h-[360px]">
+            <div class="panel overflow-hidden p-3.5 rounded-3xl border border-black/[0.04] bg-warm-white/95 shadow-card" data-tilt="4">
+              <div class="scan-frame relative h-[320px] overflow-hidden rounded-2xl bg-surface-container sm:h-[360px]">
                 <img src="assets/img/hero-fruit.jpg" alt="Ilustrasi apel dan jeruk segar di atas permukaan terang" class="h-full w-full object-cover transition-transform duration-700 hover:scale-105" width="512" height="279" />
                 <div class="absolute inset-0 bg-gradient-to-t from-soft-charcoal/70 via-soft-charcoal/5 to-transparent"></div>
 
@@ -137,40 +118,40 @@
                 <span class="scan-corner bl"></span>
                 <span class="scan-corner br"></span>
 
-                <div class="absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-md bg-warm-white/90 px-2 py-1 backdrop-blur">
+                <div class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-warm-white/90 px-2.5 py-1 shadow-sm backdrop-blur">
                   <span class="icon text-[14px] text-strawberry-red">center_focus_strong</span>
-                  <span class="font-label-sm text-[10px] font-semibold uppercase tracking-wider text-soft-charcoal">ROI #1</span>
+                  <span class="font-label-sm text-[10px] font-bold uppercase tracking-wider text-soft-charcoal">ROI #1 DETECTED</span>
                 </div>
 
-                <div class="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-forest-green/90 px-2.5 py-1 font-label-sm text-label-sm text-warm-white shadow-sm backdrop-blur">
+                <div class="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-forest-green/90 px-3 py-1 font-label-sm text-label-sm text-warm-white shadow-sm backdrop-blur">
                   <span class="pulse-dot inline-block h-2 w-2 rounded-full bg-secondary-fixed text-secondary-fixed"></span>
-                  <span data-mode-badge>Mode demo</span>
+                  <span data-mode-badge data-i18n="common.demoMode">Mode demo</span>
                 </div>
               </div>
 
               <!-- floating preview card -->
-              <div class="relative -mt-12 mx-2 rounded-xl bg-warm-white p-4 shadow-card ring-1 ring-black/[0.03]">
-                <div class="absolute -top-2.5 right-3 rounded-full bg-surface-container px-2 py-0.5 font-label-sm text-[10px] font-medium uppercase tracking-wide text-on-surface-variant">
+              <div class="relative -mt-14 mx-2 rounded-2xl bg-warm-white/95 p-4 shadow-card ring-1 ring-black/[0.04] backdrop-blur-md">
+                <div class="absolute -top-3 right-3 rounded-full bg-secondary-container px-2.5 py-0.5 font-label-sm text-[10px] font-bold uppercase tracking-wide text-forest-green shadow-xs" data-i18n="hero.previewBadge">
                   Contoh tampilan
                 </div>
                 <div class="flex items-center justify-between gap-3">
                   <div class="flex items-center gap-3">
-                    <div class="grid h-10 w-10 place-items-center rounded-xl bg-primary-fixed text-strawberry-red">
+                    <div class="grid h-11 w-11 place-items-center rounded-2xl bg-primary-fixed text-strawberry-red shadow-xs">
                       <span class="icon text-[24px]">nutrition</span>
                     </div>
                     <div>
-                      <h3 class="font-headline-sm text-headline-sm leading-tight text-soft-charcoal">Apel</h3>
-                      <p class="font-body-sm text-body-sm text-on-surface-variant">Malus domestica</p>
+                      <h3 class="font-headline-sm text-headline-sm font-bold leading-tight text-soft-charcoal" data-i18n="hero.sampleFruit">Apel</h3>
+                      <p class="font-body-sm text-[12px] text-on-surface-variant">Malus domestica</p>
                     </div>
                   </div>
-                  <span class="chip chip-fresh !text-[11px]">
-                    <span class="icon text-[15px]">check_circle</span> Segar
+                  <span class="chip chip-fresh !text-[11px] !px-3 !py-1 shadow-xs">
+                    <span class="icon text-[15px]">check_circle</span> <span data-i18n="hero.sampleStatus">Segar</span>
                   </span>
                 </div>
 
                 <div class="mt-3">
                   <div class="flex items-center justify-between font-label-sm text-label-sm">
-                    <span class="font-medium text-on-surface-variant">Confidence (ilustrasi)</span>
+                    <span class="font-medium text-on-surface-variant" data-i18n="hero.sampleConf">Confidence (ilustrasi)</span>
                     <span class="font-bold text-forest-green">94.8%</span>
                   </div>
                   <div class="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-surface-container p-0.5">
@@ -179,12 +160,102 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-between px-2 pb-1 pt-3 font-body-sm text-body-sm text-on-surface-variant">
-                <span class="inline-flex items-center gap-1">
+              <div class="flex items-center justify-between px-3 pb-1 pt-3.5 font-body-sm text-body-sm text-on-surface-variant">
+                <span class="inline-flex items-center gap-1.5 font-medium">
                   <span class="icon text-[16px] text-peach-orange">bolt</span>
-                  Output model
+                  <span data-i18n="hero.outputLabel">Output model</span>
                 </span>
-                <span class="font-medium text-forest-green">Jenis + kesegaran</span>
+                <span class="font-semibold text-forest-green" data-i18n="hero.outputVal">12 kelas (jenis + kesegaran)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Modern Bento Specs & Highlights Deck (On mobile: placed after visual preview; on desktop: placed on the left row 2) -->
+        <div class="order-3 w-full max-w-xl lg:col-span-7 lg:col-start-1 lg:row-start-2" data-hero-item>
+          <!-- Floating Frosted Badges Ribbon: Aligned 3-Columns Row -->
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-2.5 w-full">
+            <div class="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full border border-forest-green/20 bg-warm-white/85 px-3 py-1.5 shadow-soft backdrop-blur-md transition-all duration-300 hover:border-forest-green/40 hover:shadow-md">
+              <span class="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-forest-green text-warm-white shadow-xs">
+                <span class="icon text-[13px]" style="font-variation-settings:'FILL' 1">verified</span>
+              </span>
+              <span class="truncate font-label-sm text-[11px] sm:text-label-sm font-semibold text-soft-charcoal" data-i18n="hero.chipModel">Custom CNN • TensorFlow / Keras</span>
+            </div>
+
+            <div class="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full border border-peach-orange/30 bg-warm-white/85 px-3 py-1.5 shadow-soft backdrop-blur-md transition-all duration-300 hover:border-peach-orange/50 hover:shadow-md">
+              <span class="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-peach-orange/30 text-tertiary">
+                <span class="icon text-[13px]">grid_view</span>
+              </span>
+              <span class="truncate font-label-sm text-[11px] sm:text-label-sm font-semibold text-soft-charcoal" data-i18n="hero.chipInput">Input 224 × 224 RGB</span>
+            </div>
+
+            <div class="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full border border-strawberry-red/25 bg-warm-white/85 px-3 py-1.5 shadow-soft backdrop-blur-md transition-all duration-300 hover:border-strawberry-red/45 hover:shadow-md">
+              <span class="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-strawberry-red/15 text-strawberry-red">
+                <span class="icon text-[13px]">photo_camera</span>
+              </span>
+              <span class="truncate font-label-sm text-[11px] sm:text-label-sm font-semibold text-soft-charcoal" data-i18n="hero.chipUpload">Upload &amp; Kamera</span>
+            </div>
+          </div>
+
+          <!-- Bento Metric Cards: Clean, Spacious & Balanced -->
+          <div class="mt-4 sm:mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3.5">
+            <!-- Metric 1: 1 Buah -->
+            <div class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.05] bg-warm-white/95 p-4 sm:p-5 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-forest-green/30 hover:shadow-card min-h-[140px] sm:min-h-[160px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-forest-green/10 text-forest-green transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[20px]">photo_camera</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-forest-green/10 px-2.5 py-1 font-label-sm text-[11px] font-bold text-forest-green tracking-wide" data-i18n="hero.metric1Badge">
+                  1 BUAH
+                </span>
+              </div>
+              <div class="mt-3 sm:mt-4">
+                <p class="font-headline-lg text-[28px] sm:text-[32px] font-extrabold leading-none tracking-tight text-forest-green">
+                  1 <span class="text-[16px] font-bold text-forest-green/85" data-i18n="hero.metric1Unit">Buah</span>
+                </p>
+                <p class="mt-2 sm:mt-2.5 font-body-sm text-[12px] sm:text-[13px] leading-relaxed text-on-surface-variant" data-i18n="hero.metric1Desc">
+                  Satu objek buah per analisis
+                </p>
+              </div>
+            </div>
+
+            <!-- Metric 2: 224 x 224 — Input Model -->
+            <div class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.05] bg-warm-white/95 p-4 sm:p-5 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-peach-orange/40 hover:shadow-card min-h-[140px] sm:min-h-[160px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-peach-orange/25 text-tertiary transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[20px]">grid_view</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-peach-orange/20 px-2.5 py-1 font-label-sm text-[11px] font-bold text-tertiary tracking-wide" data-i18n="hero.metric2Badge">
+                  INPUT MODEL
+                </span>
+              </div>
+              <div class="mt-3 sm:mt-4">
+                <p class="font-headline-lg text-[26px] sm:text-[28px] font-extrabold leading-none tracking-tight text-tertiary-container">
+                  <span data-count-to="224">224</span><span class="text-[17px] sm:text-[18px] font-bold text-tertiary-container/80">×224</span>
+                </p>
+                <p class="mt-2 sm:mt-2.5 font-body-sm text-[12px] sm:text-[13px] leading-relaxed text-on-surface-variant" data-i18n="hero.metric2Desc">
+                  Ukuran gambar input dalam piksel, RGB 3-channel
+                </p>
+              </div>
+            </div>
+
+            <!-- Metric 3: 12 Kelas -->
+            <div class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.05] bg-warm-white/95 p-4 sm:p-5 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-strawberry-red/30 hover:shadow-card min-h-[140px] sm:min-h-[160px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-strawberry-red/10 text-strawberry-red transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[20px]" style="font-variation-settings:'FILL' 1">eco</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-strawberry-red/10 px-2.5 py-1 font-label-sm text-[11px] font-bold text-strawberry-red tracking-wide" data-i18n="hero.metric3Badge">
+                  6 BUAH
+                </span>
+              </div>
+              <div class="mt-3 sm:mt-4">
+                <p class="font-headline-lg text-[28px] sm:text-[32px] font-extrabold leading-none tracking-tight text-strawberry-red">
+                  12 <span class="text-[16px] font-bold text-forest-green" data-i18n="hero.metric3Unit">Kelas</span>
+                </p>
+                <p class="mt-2 sm:mt-2.5 font-body-sm text-[12px] sm:text-[13px] leading-relaxed text-on-surface-variant" data-i18n="hero.metric3Desc">
+                  6 jenis buah × 2 kondisi, yaitu Fresh dan Rotten
+                </p>
               </div>
             </div>
           </div>
@@ -192,264 +263,570 @@
       </div>
     </section>
 
-    <!-- ================= HOW IT WORKS ================= -->
-    <section id="how-it-works" class="relative scroll-mt-24 bg-surface-container-low/70 py-16 sm:py-20">
+    <!-- ================= HOW IT WORKS (MODERN BENTO FLOW) ================= -->
+    <section id="how-it-works" class="relative scroll-mt-24 overflow-hidden bg-gradient-to-b from-surface via-surface-container-low/60 to-surface py-20 sm:py-24">
+      <!-- ambient background glow -->
+      <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div class="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-peach-orange/10 blur-3xl"></div>
+      </div>
+
       <div class="shell">
+        <!-- Section Header -->
         <div class="mx-auto max-w-2xl text-center" data-reveal-group>
-          <span data-reveal class="section-label">Alur kerja</span>
-          <h2 data-reveal class="mt-2 font-headline-lg text-headline-lg font-bold text-forest-green sm:text-[34px]">
-            Tiga langkah, satu hasil
+          <div data-reveal class="inline-flex items-center gap-2 rounded-full border border-forest-green/15 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur-md">
+            <span class="h-2 w-2 rounded-full bg-forest-green animate-pulse"></span>
+            <span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-forest-green" data-i18n="how.label">Alur Kerja</span>
+          </div>
+
+          <h2 data-reveal class="mt-4 font-headline-lg text-[32px] font-extrabold tracking-tight text-forest-green sm:text-[40px]">
+            <span data-i18n="how.title">Tiga langkah, satu hasil</span>
           </h2>
-          <p data-reveal class="mt-2 font-body-md text-body-md text-on-surface-variant">
-            Alurnya sengaja dibuat pendek: unggah, model memproses, hasil ditampilkan. Tidak ada langkah tambahan yang tidak perlu.
+
+          <p data-reveal class="mt-3 font-body-md text-body-md leading-relaxed text-on-surface-variant" data-i18n="how.desc">
+            Alurnya sengaja dibuat pendek: unggah atau foto buah, model memproses, hasil prediksi ditampilkan. Tanpa proses berbelit.
           </p>
         </div>
 
-        <div class="relative mt-10 grid grid-cols-1 gap-5 md:grid-cols-3" data-reveal-group>
-          <div class="pointer-events-none absolute left-[16%] right-[16%] top-[54px] hidden border-t border-dashed border-outline-variant/70 md:block" aria-hidden="true"></div>
-
-          <article data-reveal class="panel lift relative flex h-full flex-col justify-between p-6">
+        <!-- 3 Modern Bento Step Cards -->
+        <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3" data-reveal-group>
+          
+          <!-- Step 1: Upload / Kamera -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-primary-fixed/25 via-warm-white to-warm-white p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-strawberry-red/30 hover:shadow-card">
+            <!-- Decorative corner accent -->
+            <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-strawberry-red/10 blur-xl"></div>
+            
             <div>
-              <div class="mb-5 flex items-center justify-between">
-                <div class="grid h-14 w-14 place-items-center rounded-2xl bg-primary-fixed text-strawberry-red">
-                  <span class="icon text-[28px]">add_photo_alternate</span>
-                </div>
-                <span class="font-headline-lg text-[40px] font-bold leading-none text-surface-dim">01</span>
+              <!-- Top Row: Badge & Step Number -->
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-strawberry-red text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">add_photo_alternate</span>
+                </span>
+                <span class="rounded-full bg-strawberry-red/10 px-3 py-1 font-headline-sm text-[12px] font-bold uppercase tracking-wider text-strawberry-red">
+                  Step 01
+                </span>
               </div>
-              <h3 class="font-headline-sm text-headline-sm font-semibold text-soft-charcoal">Upload gambar buah</h3>
-              <p class="mt-2 font-body-md text-body-md leading-relaxed text-on-surface-variant">
-                Pilih foto JPG atau PNG dari perangkat. Satu buah di tengah frame dengan cahaya merata memberi hasil paling stabil.
+
+              <!-- Interactive Visual Mockup Tag -->
+              <div class="mt-6 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span class="flex items-center gap-1.5">
+                    <span class="icon text-[16px] text-strawberry-red">photo_camera</span>
+                    <span>Dual Input Mode</span>
+                  </span>
+                  <span class="rounded-full bg-surface-container px-2 py-0.5 text-[10px] text-on-surface-variant">File / Web</span>
+                </div>
+                <div class="mt-2.5 flex items-center gap-1.5 text-[11px] text-on-surface-variant">
+                  <span class="rounded-md bg-surface-container px-2 py-1 font-medium">JPG</span>
+                  <span class="rounded-md bg-surface-container px-2 py-1 font-medium">JPEG</span>
+                  <span class="rounded-md bg-surface-container px-2 py-1 font-medium">PNG</span>
+                  <span class="ml-auto font-medium text-forest-green">Instant</span>
+                </div>
+              </div>
+
+              <h3 class="mt-6 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="how.step1Title">1. Upload atau foto buah</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="how.step1Desc">
+                Pilih foto JPG atau PNG dari perangkat atau potret langsung dengan kamera. Satu buah di tengah frame dengan cahaya merata memberi hasil terbaik.
               </p>
             </div>
-            <div class="mt-5 flex items-center gap-1.5 border-t border-black/[0.05] pt-3 font-label-md text-label-md text-forest-green">
-              <span class="icon text-[18px]">image</span> Maks 10 MB per gambar
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-label-sm font-medium text-forest-green">
+              <span class="icon text-[18px]">image</span>
+              <span data-i18n="how.step1Meta">Maks 10 MB per gambar</span>
             </div>
           </article>
 
-          <article data-reveal class="panel lift relative flex h-full flex-col justify-between p-6">
+          <!-- Step 2: CNN Inference -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-tertiary-fixed/35 via-warm-white to-warm-white p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-peach-orange/40 hover:shadow-card">
+            <!-- Decorative corner accent -->
+            <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-peach-orange/15 blur-xl"></div>
+            
             <div>
-              <div class="mb-5 flex items-center justify-between">
-                <div class="grid h-14 w-14 place-items-center rounded-2xl bg-secondary-fixed text-forest-green">
-                  <span class="icon text-[28px]">hub</span>
-                </div>
-                <span class="font-headline-lg text-[40px] font-bold leading-none text-surface-dim">02</span>
+              <!-- Top Row: Badge & Step Number -->
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-tertiary text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">hub</span>
+                </span>
+                <span class="rounded-full bg-peach-orange/25 px-3 py-1 font-headline-sm text-[12px] font-bold uppercase tracking-wider text-tertiary">
+                  Step 02
+                </span>
               </div>
-              <h3 class="font-headline-sm text-headline-sm font-semibold text-soft-charcoal">Model CNN memproses</h3>
-              <p class="mt-2 font-body-md text-body-md leading-relaxed text-on-surface-variant">
-                Gambar diubah ke 128 × 128 piksel RGB, lalu melewati lapisan konvolusi untuk mengekstrak pola warna dan tekstur.
+
+              <!-- Interactive Visual Mockup Tag -->
+              <div class="mt-6 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span class="flex items-center gap-1.5">
+                    <span class="icon text-[16px] text-tertiary">memory</span>
+                    <span>TensorFlow / Keras</span>
+                  </span>
+                  <span class="rounded-full bg-peach-orange/20 px-2 py-0.5 text-[10px] font-bold text-tertiary">224 × 224</span>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Convolutional Feature Map</span>
+                  <span class="font-bold text-tertiary">RGB 3-Ch</span>
+                </div>
+              </div>
+
+              <h3 class="mt-6 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="how.step2Title">2. Model CNN memproses</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="how.step2Desc">
+                Gambar di-resize ke 224 × 224 piksel RGB, lalu melewati lapisan konvolusi model TensorFlow / Keras untuk membaca pola warna dan tekstur.
               </p>
             </div>
-            <div class="mt-5 flex items-center gap-1.5 border-t border-black/[0.05] pt-3 font-label-md text-label-md text-forest-green">
-              <span class="icon text-[18px]">memory</span> PyTorch inference
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-label-sm font-medium text-forest-green">
+              <span class="icon text-[18px]">memory</span>
+              <span data-i18n="how.step2Meta">TensorFlow / Keras inference</span>
             </div>
           </article>
 
-          <article data-reveal class="panel lift relative flex h-full flex-col justify-between p-6">
+          <!-- Step 3: Result & Confidence -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-secondary-fixed/35 via-warm-white to-warm-white p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-forest-green/35 hover:shadow-card">
+            <!-- Decorative corner accent -->
+            <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-forest-green/15 blur-xl"></div>
+            
             <div>
-              <div class="mb-5 flex items-center justify-between">
-                <div class="grid h-14 w-14 place-items-center rounded-2xl bg-tertiary-fixed text-tertiary-container">
-                  <span class="icon text-[28px]">fact_check</span>
-                </div>
-                <span class="font-headline-lg text-[40px] font-bold leading-none text-surface-dim">03</span>
+              <!-- Top Row: Badge & Step Number -->
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-forest-green text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">fact_check</span>
+                </span>
+                <span class="rounded-full bg-forest-green/15 px-3 py-1 font-headline-sm text-[12px] font-bold uppercase tracking-wider text-forest-green">
+                  Step 03
+                </span>
               </div>
-              <h3 class="font-headline-sm text-headline-sm font-semibold text-soft-charcoal">Hasil &amp; confidence</h3>
-              <p class="mt-2 font-body-md text-body-md leading-relaxed text-on-surface-variant">
-                Halaman hasil menampilkan jenis buah, status segar atau busuk, serta confidence score bila model menyediakannya.
+
+              <!-- Interactive Visual Mockup Tag -->
+              <div class="mt-6 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span class="flex items-center gap-1.5">
+                    <span class="icon text-[16px] text-forest-green">verified</span>
+                    <span>12 Kelas Dataset</span>
+                  </span>
+                  <span class="rounded-full bg-forest-green/10 px-2 py-0.5 text-[10px] font-bold text-forest-green">Fresh / Rotten</span>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Softmax Probabilities</span>
+                  <span class="font-bold text-forest-green">Confidence %</span>
+                </div>
+              </div>
+
+              <h3 class="mt-6 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="how.step3Title">3. Hasil prediksi ditampilkan</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="how.step3Desc">
+                Halaman hasil menampilkan jenis buah, status segar atau busuk (dari 12 kelas dataset), serta confidence score bila disediakan model.
               </p>
             </div>
-            <div class="mt-5 flex items-center gap-1.5 border-t border-black/[0.05] pt-3 font-label-md text-label-md text-forest-green">
-              <span class="icon text-[18px]">analytics</span> Bukan jaminan kualitas
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-label-sm font-medium text-forest-green">
+              <span class="icon text-[18px]">analytics</span>
+              <span data-i18n="how.step3Meta">Bukan jaminan kualitas pangan</span>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ================= FUN FACT ================= -->
-    <section id="fun-fact" class="scroll-mt-24 py-16 sm:py-20">
+    <!-- ================= FUN FACT (MODERN BENTO SCIENCE DECK) ================= -->
+    <section id="fun-fact" class="scroll-mt-24 py-16 sm:py-24 bg-gradient-to-b from-surface via-surface-container-low/40 to-surface">
       <div class="shell">
         <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end" data-reveal-group>
           <div data-reveal>
-            <span class="section-label">Fun fact</span>
-            <h2 class="mt-2 font-headline-lg text-headline-lg font-bold text-soft-charcoal sm:text-[34px]">
-              Tahukah kamu?
+            <div class="inline-flex items-center gap-2 rounded-full border border-forest-green/15 bg-white/80 px-3.5 py-1.5 shadow-soft backdrop-blur-md">
+              <span class="flex h-4 w-4 items-center justify-center rounded-full bg-forest-green text-warm-white">
+                <span class="icon text-[11px]">science</span>
+              </span>
+              <span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-forest-green" data-i18n="fact.label">Fakta Buah</span>
+            </div>
+            <h2 class="mt-3 font-headline-lg text-[32px] font-extrabold tracking-tight text-forest-green sm:text-[40px]" data-i18n="fact.title">
+              Sains &amp; Rahasia Kesegaran Buah
             </h2>
           </div>
-          <p data-reveal class="max-w-md font-body-md text-body-md leading-relaxed text-on-surface-variant">
-            Sedikit konteks tentang buah dan kesegaran. Ini bukan keluaran model, tetapi membantu memahami kenapa satu foto punya batas.
+          <p data-reveal class="max-w-md font-body-md text-body-md leading-relaxed text-on-surface-variant" data-i18n="fact.desc">
+            Konteks biologi buah yang melatarbelakangi analisis visual CNN. Memahami mengapa warna, tekstur, dan aroma berubah seiring waktu.
           </p>
         </div>
 
-        <div class="mt-9 grid grid-cols-1 gap-5 lg:grid-cols-[1.15fr_1fr]" data-reveal-group>
-          <article data-reveal class="relative overflow-hidden rounded-2xl bg-forest-green p-6 text-warm-white shadow-lift sm:p-8">
-            <div class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-leaf-green/25 blur-2xl" aria-hidden="true"></div>
-            <div class="relative">
-              <div class="flex items-start justify-between gap-4">
-                <span class="grid h-12 w-12 place-items-center rounded-2xl bg-warm-white/10 text-secondary-fixed">
-                  <span class="icon text-[26px]">science</span>
+        <!-- 3 Modern Bento Science Cards -->
+        <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3" data-reveal-group>
+          
+          <!-- Card 1: Etilena -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-primary-fixed/20 via-warm-white to-warm-white p-6 sm:p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-forest-green/35 hover:shadow-card">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-leaf-green/10 blur-xl"></div>
+            
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-forest-green text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">science</span>
                 </span>
-                <span class="chip bg-warm-white/10 text-warm-white/80">Kimia buah</span>
+                <span class="rounded-full bg-forest-green/10 px-3 py-1 font-headline-sm text-[11px] font-bold uppercase tracking-wider text-forest-green">
+                  Gas C₂H₄
+                </span>
               </div>
-              <h3 class="mt-6 font-headline-md text-headline-md font-bold">Etilena, si gas pematang</h3>
-              <p class="mt-2 max-w-lg font-body-md text-body-md leading-relaxed text-warm-white/75">
-                Apel dan pisang melepaskan etilena, gas alami yang dapat mempercepat pematangan buah di sekitarnya.
+
+              <!-- Interactive Visual Badge -->
+              <div class="mt-5 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span class="flex items-center gap-1.5">
+                    <span class="text-[14px]">🍎</span>
+                    <span>Apel</span>
+                    <span class="text-on-surface-variant/50">+</span>
+                    <span class="text-[14px]">🍌</span>
+                    <span>Pisang</span>
+                  </span>
+                  <span class="rounded-full bg-forest-green/10 px-2 py-0.5 text-[10px] font-bold text-forest-green">Klimaterik</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Pelepasan gas alami</span>
+                  <span class="font-bold text-forest-green">Pematang Aktif</span>
+                </div>
+              </div>
+
+              <h3 class="mt-5 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="fact.card1Title">Etilena, Si Gas Pematang</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="fact.card1Desc">
+                Apel dan pisang melepaskan etilena, hormon alami yang memicu proses pematangan buah lain di dekatnya secara cepat.
               </p>
-              <div class="mt-6 flex items-center gap-2 border-t border-warm-white/15 pt-4 font-label-sm text-label-sm text-warm-white/60">
-                <span class="icon text-[17px] text-secondary-fixed">lightbulb</span>
-                <span>Konteks umum, bukan hasil prediksi model.</span>
-              </div>
+            </div>
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-[12px] font-medium text-forest-green">
+              <span class="icon text-[17px] text-leaf-green">lightbulb</span>
+              <span>Tips: Pisahkan buah matang dari yang belum matang</span>
             </div>
           </article>
 
-          <div class="grid gap-5">
-            <article data-reveal class="panel flex items-start gap-4 p-5 sm:p-6">
-              <span class="grid h-11 w-11 flex-none place-items-center rounded-xl bg-tertiary-fixed text-tertiary-container">
-                <span class="icon text-[23px]">palette</span>
-              </span>
-              <div>
-                <h3 class="font-headline-sm text-headline-sm font-bold text-soft-charcoal">Warna kulit bukan patokan tunggal</h3>
-                <p class="mt-2 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
-                  Pada banyak buah, warna kulit berubah lebih dulu daripada tekstur dan aroma. Foto permukaan punya batas.
-                </p>
+          <!-- Card 2: Pigmen Warna Kulit -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-tertiary-fixed/30 via-warm-white to-warm-white p-6 sm:p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-peach-orange/45 hover:shadow-card">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-peach-orange/15 blur-xl"></div>
+            
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-tertiary text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">palette</span>
+                </span>
+                <span class="rounded-full bg-peach-orange/25 px-3 py-1 font-headline-sm text-[11px] font-bold uppercase tracking-wider text-tertiary">
+                  Spektrum Pigmen
+                </span>
               </div>
-            </article>
 
-            <article data-reveal class="panel flex items-start gap-4 p-5 sm:p-6">
-              <span class="grid h-11 w-11 flex-none place-items-center rounded-xl bg-secondary-fixed text-forest-green">
-                <span class="icon text-[23px]">timer</span>
-              </span>
-              <div>
-                <h3 class="font-headline-sm text-headline-sm font-bold text-soft-charcoal">Setelah dipetik, buah masih bernapas</h3>
-                <p class="mt-2 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
-                  Buah tetap melakukan respirasi setelah dipanen, sehingga tekstur, warna, dan rasanya bisa berubah.
-                </p>
+              <!-- Interactive Visual Badge: Pigment Spectrum -->
+              <div class="mt-5 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span>Gradasi Pigmentasi</span>
+                  <span class="rounded-full bg-peach-orange/20 px-2 py-0.5 text-[10px] font-bold text-tertiary">Spektral</span>
+                </div>
+                <!-- Pigment color gradient strip -->
+                <div class="mt-2.5 h-3 w-full rounded-full bg-gradient-to-r from-forest-green via-sunny-yellow to-strawberry-red p-0.5 shadow-inner"></div>
+                <div class="mt-1.5 flex items-center justify-between text-[10px] text-on-surface-variant font-medium">
+                  <span>Klorofil (Hijau)</span>
+                  <span>Karotenoid</span>
+                  <span>Antosianin</span>
+                </div>
               </div>
-            </article>
-          </div>
+
+              <h3 class="mt-5 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="fact.card2Title">Warna Kulit Bukan Patokan Tunggal</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="fact.card2Desc">
+                Pada banyak buah, warna kulit berubah lebih dulu daripada aroma dan tekstur. Model CNN membaca tekstur dan gradasi sekaligus.
+              </p>
+            </div>
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-[12px] font-medium text-tertiary-container">
+              <span class="icon text-[17px] text-peach-orange">auto_awesome</span>
+              <span>Tips: Perhatikan tekstur fisik, bukan hanya warna luar</span>
+            </div>
+          </article>
+
+          <!-- Card 3: Respirasi Buah -->
+          <article data-reveal class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.05] bg-gradient-to-b from-secondary-fixed/35 via-warm-white to-warm-white p-6 sm:p-7 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-forest-green/35 hover:shadow-card">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-forest-green/15 blur-xl"></div>
+            
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-leaf-green text-warm-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[24px]">timer</span>
+                </span>
+                <span class="rounded-full bg-forest-green/15 px-3 py-1 font-headline-sm text-[11px] font-bold uppercase tracking-wider text-forest-green">
+                  Metabolisme Sel
+                </span>
+              </div>
+
+              <!-- Interactive Visual Badge: Respiration -->
+              <div class="mt-5 rounded-2xl border border-black/[0.04] bg-white/80 p-3.5 backdrop-blur-sm shadow-xs transition-transform duration-300 group-hover:scale-[1.02]">
+                <div class="flex items-center justify-between text-label-sm font-semibold text-soft-charcoal">
+                  <span class="flex items-center gap-1.5">
+                    <span class="pulse-dot h-2 w-2 rounded-full bg-leaf-green"></span>
+                    <span>Respirasi Pasca-Panen</span>
+                  </span>
+                  <span class="rounded-full bg-forest-green/10 px-2 py-0.5 text-[10px] font-bold text-forest-green">O₂ → CO₂</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Laju respirasi seluler</span>
+                  <span class="font-bold text-forest-green">Berlangsung Terus</span>
+                </div>
+              </div>
+
+              <h3 class="mt-5 font-headline-sm text-[20px] font-bold text-soft-charcoal" data-i18n="fact.card3Title">Setelah Dipetik, Buah Masih Bernapas</h3>
+              <p class="mt-2.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="fact.card3Desc">
+                Buah tetap aktif bernapas dan memecah gula setelah dipanen. Suhu sejuk dan sirkulasi udara memperlambat proses ini secara efektif.
+              </p>
+            </div>
+
+            <div class="mt-6 flex items-center gap-2 border-t border-black/[0.05] pt-4 font-label-sm text-[12px] font-medium text-forest-green">
+              <span class="icon text-[17px] text-leaf-green">eco</span>
+              <span>Tips: Simpan di tempat sejuk dengan sirkulasi udara baik</span>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ================= HONESTY NOTE ================= -->
+    <!-- ================= HONESTY NOTE (MODERN ETHICS & TRANSPARENCY) ================= -->
     <section class="shell pb-16 sm:pb-20">
-      <div class="panel grid grid-cols-1 gap-6 p-6 sm:p-8 lg:grid-cols-[1.1fr_1fr]" data-reveal>
-        <div>
-          <span class="section-label">Yang perlu diketahui</span>
-          <h2 class="mt-2 font-headline-md text-headline-md font-bold text-soft-charcoal">
-            Hasil model, bukan vonis kualitas
-          </h2>
-          <p class="mt-2 max-w-lg font-body-md text-body-md leading-relaxed text-on-surface-variant">
-            FruGrade memprediksi kelas yang dipelajari dari dataset. Gambar dengan banyak objek, bayangan keras, atau buah
-            di luar kelas pelatihan bisa menurunkan keandalan hasil.
-          </p>
-        </div>
-        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-          <li class="flex items-start gap-3 rounded-xl bg-surface-container-low p-3">
-            <span class="icon mt-0.5 text-[20px] text-forest-green">straighten</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant"><strong class="text-soft-charcoal">Satu buah per foto.</strong> Model MVP tidak melakukan deteksi multi-objek.</span>
-          </li>
-          <li class="flex items-start gap-3 rounded-xl bg-surface-container-low p-3">
-            <span class="icon mt-0.5 text-[20px] text-tertiary">percent</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant"><strong class="text-soft-charcoal">Confidence ≠ akurasi.</strong> Skor menunjukkan keyakinan model pada satu prediksi.</span>
-          </li>
-          <li class="flex items-start gap-3 rounded-xl bg-surface-container-low p-3">
-            <span class="icon mt-0.5 text-[20px] text-strawberry-red">inventory_2</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant"><strong class="text-soft-charcoal">Tanpa riwayat.</strong> Hasil hanya tersimpan selama tab browser aktif.</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ================= CTA ================= -->
-    <section class="shell pb-16 sm:pb-20">
-      <div class="relative overflow-hidden rounded-3xl bg-forest-green p-7 text-warm-white shadow-lift sm:p-10 lg:p-12" data-reveal>
-        <div class="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-leaf-green/25 blur-2xl" aria-hidden="true"></div>
-        <div class="pointer-events-none absolute left-1/3 top-0 h-64 w-64 rounded-full bg-peach-orange/10 blur-3xl" aria-hidden="true"></div>
-
-        <div class="relative z-10 flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+      <div class="relative overflow-hidden rounded-3xl border border-black/[0.05] bg-warm-white/95 p-6 shadow-card sm:p-8 backdrop-blur-md" data-reveal>
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
           <div class="max-w-xl">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-label-sm backdrop-blur">
-              <span class="icon text-[16px] text-sunny-yellow">bolt</span>
-              Tanpa akun, tanpa instalasi
-            </span>
-            <h2 class="mt-3 font-headline-lg text-headline-lg font-bold tracking-tight text-warm-white sm:text-[36px]">
-              Mulai analisis buah sekarang
+            <div class="inline-flex items-center gap-2 rounded-full bg-peach-orange/20 px-3 py-1 font-label-sm text-[11px] font-bold text-tertiary">
+              <span class="icon text-[14px]">info</span>
+              <span data-i18n="note.label">Yang perlu diketahui</span>
+            </div>
+            <h2 class="mt-3 font-headline-md text-headline-md font-bold text-soft-charcoal" data-i18n="note.title">
+              Hasil model, bukan vonis kualitas pangan
             </h2>
-            <p class="mt-2 max-w-lg font-body-md text-body-md leading-relaxed text-warm-white/75">
-              Unggah satu foto, lihat jenis buah dan status kesegarannya. Coba beberapa contoh bila belum punya foto.
+            <p class="mt-2 font-body-md text-body-md leading-relaxed text-on-surface-variant" data-i18n="note.desc">
+              FruGrade memprediksi 12 kelas yang dipelajari dari dataset pelatihan. Gambar dengan objek lain atau pencahayaan buruk dapat menurunkan keandalan.
             </p>
           </div>
 
-          <div class="flex w-full flex-col items-start gap-3 md:w-auto md:items-end">
-            <span data-mascot="banana" data-size="82" class="mascot-bob delay-2 mb-1 self-center md:self-end" aria-hidden="true"></span>
-            <a href="upload.html" class="btn-primary w-full md:w-auto" data-magnetic="8">
-              <span class="icon text-[20px]">upload_file</span>
-              <span>Start Scanning</span>
-            </a>
+          <div class="grid w-full gap-3 sm:grid-cols-3 lg:max-w-2xl">
+            <!-- Item 1 -->
+            <div class="rounded-2xl border border-black/[0.04] bg-surface-container-low/70 p-4 transition-all duration-200 hover:border-forest-green/30 hover:bg-white/80">
+              <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-forest-green/10 text-forest-green">
+                <span class="icon text-[18px]">center_focus_strong</span>
+              </span>
+              <p class="mt-3 font-label-md text-label-md font-bold text-soft-charcoal">1 Objek per Foto</p>
+              <p class="mt-1 font-body-sm text-[12px] leading-relaxed text-on-surface-variant">Model fokus pada satu buah di tengah frame.</p>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="rounded-2xl border border-black/[0.04] bg-surface-container-low/70 p-4 transition-all duration-200 hover:border-peach-orange/40 hover:bg-white/80">
+              <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-peach-orange/25 text-tertiary">
+                <span class="icon text-[18px]">percent</span>
+              </span>
+              <p class="mt-3 font-label-md text-label-md font-bold text-soft-charcoal">Confidence ≠ Mutu</p>
+              <p class="mt-1 font-body-sm text-[12px] leading-relaxed text-on-surface-variant">Skor keyakinan inferensi CNN pada dataset visual.</p>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="rounded-2xl border border-black/[0.04] bg-surface-container-low/70 p-4 transition-all duration-200 hover:border-strawberry-red/30 hover:bg-white/80">
+              <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-strawberry-red/10 text-strawberry-red">
+                <span class="icon text-[18px]">verified_user</span>
+              </span>
+              <p class="mt-3 font-label-md text-label-md font-bold text-soft-charcoal">Privasi Penuh</p>
+              <p class="mt-1 font-body-sm text-[12px] leading-relaxed text-on-surface-variant">Foto diproses di browser tanpa simpan riwayat.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA (MODERN FRUIT FRIENDS ENSEMBLE) ================= -->
+    <section class="shell pb-16 sm:pb-24">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-forest-green via-[#234b2e] to-[#1a3822] p-8 text-warm-white shadow-lift sm:p-11 lg:p-14" data-reveal>
+        <!-- Ambient Colorful Glows -->
+        <div class="pointer-events-none absolute -bottom-24 -right-16 h-88 w-88 rounded-full bg-strawberry-red/20 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-1/3 -top-16 h-72 w-72 rounded-full bg-peach-orange/20 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-0 bottom-0 h-64 w-64 rounded-full bg-leaf-green/20 blur-2xl" aria-hidden="true"></div>
+
+        <div class="relative z-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
+          <!-- Left Column: Copy & Value Proposition (7 cols) -->
+          <div class="lg:col-span-7">
+            <div class="inline-flex items-center gap-2 rounded-full bg-warm-white/15 px-3.5 py-1.5 font-label-sm text-label-sm font-semibold text-warm-white backdrop-blur-md shadow-xs">
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-sunny-yellow text-forest-green">
+                <span class="icon text-[13px]" style="font-variation-settings:'FILL' 1">bolt</span>
+              </span>
+              <span data-i18n="cta.badge">Tanpa akun, tanpa instalasi</span>
+            </div>
+
+            <h2 class="mt-4 font-headline-lg text-[32px] sm:text-[40px] lg:text-[44px] font-extrabold tracking-tight text-warm-white leading-[1.12]" data-i18n="cta.title">
+              Cek Kesegaran Buahmu Sekarang
+            </h2>
+
+            <p class="mt-3 max-w-xl font-body-md text-[15px] sm:text-body-md leading-relaxed text-warm-white/80" data-i18n="cta.desc">
+              Potret langsung dengan kamera atau unggah foto dari galeri. Deteksi kualitas buah favoritmu secara instan.
+            </p>
+
+            <!-- 3 Highlights Badges -->
+            <div class="mt-6 flex flex-wrap items-center gap-2.5 text-[12px] font-medium text-warm-white/90">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+                <span class="icon text-[14px] text-sunny-yellow">check_circle</span>
+                <span>Inferensi &lt; 1 Detik</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+                <span class="icon text-[14px] text-peach-orange">verified</span>
+                <span>6 Buah &amp; 12 Kelas</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+                <span class="icon text-[14px] text-secondary-fixed">verified_user</span>
+                <span>100% Privasi di Browser</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Fruit Friends Stage (5 cols) -->
+          <div class="lg:col-span-5 flex justify-center lg:justify-end">
+            <div class="relative w-full max-w-[380px] rounded-3xl border border-white/20 bg-warm-white/10 p-6 sm:p-7 backdrop-blur-xl shadow-2xl text-center">
+              
+              <!-- Floating Playful Speech Bubble -->
+              <div class="relative mx-auto -mt-2 mb-3 inline-flex items-center gap-1.5 rounded-full bg-warm-white px-3.5 py-1.5 shadow-card transition-transform duration-300 hover:scale-105">
+                <span class="text-[13px]">✨</span>
+                <span class="font-label-sm text-[12px] font-bold text-forest-green" data-i18n="cta.bubble">Yuk cek buahmu bareng kami!</span>
+                <!-- bubble tail -->
+                <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-warm-white"></span>
+              </div>
+
+              <!-- Trio Mascots Ensemble (Apple + Banana + Orange) -->
+              <div class="relative my-2 flex items-end justify-center gap-1 sm:gap-2">
+                <!-- Apple Peeking Left -->
+                <span data-mascot="apple" data-size="76" class="mascot-bob -rotate-6 transition-transform hover:scale-110" aria-hidden="true"></span>
+                <!-- Banana Center Lead -->
+                <span data-mascot="banana" data-size="92" class="mascot-bob delay-1 -mx-2 z-10 transition-transform hover:scale-110" aria-hidden="true"></span>
+                <!-- Orange Peeking Right -->
+                <span data-mascot="orange" data-size="70" class="mascot-bob delay-2 rotate-6 transition-transform hover:scale-110" aria-hidden="true"></span>
+              </div>
+
+              <!-- Action Button -->
+              <div class="mt-4">
+                <a href="upload.html" class="btn-primary group w-full !py-3.5 !px-6 !text-headline-sm !font-bold shadow-card transition-all duration-300 hover:scale-[1.03] active:scale-95" data-magnetic="8">
+                  <span class="icon text-[20px]">photo_camera</span>
+                  <span data-i18n="cta.btn">Mulai Pindai Sekarang</span>
+                  <span class="icon text-[18px] transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
+                </a>
+              </div>
+
+              <!-- Micro Helper Info -->
+              <div class="mt-3 flex items-center justify-center gap-2 text-[11px] text-warm-white/75 font-medium">
+                <span class="flex items-center gap-1">
+                  <span class="icon text-[13px] text-sunny-yellow">photo_camera</span> Kamera
+                </span>
+                <span>•</span>
+                <span class="flex items-center gap-1">
+                  <span class="icon text-[13px] text-peach-orange">upload_file</span> Galeri
+                </span>
+                <span>•</span>
+                <span>Maks 10 MB</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="border-t border-black/[0.05] bg-surface-container-low pb-24 pt-10 md:pb-10">
-    <div class="shell flex flex-col justify-between gap-8 md:flex-row md:items-start">
-      <div class="max-w-sm">
-        <div class="flex items-center gap-2.5">
-          <img src="assets/img/logo.png" alt="FruGrade — Smart Fruit Analysis" class="h-11 w-auto" width="320" height="160" loading="lazy" />
-        </div>
-        <p class="mt-2 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
-          Sistem klasifikasi jenis dan kesegaran buah berbasis CNN. Proyek akademik — hasil prediksi bukan jaminan kualitas pangan.
-        </p>
-      </div>
+  <!-- ================= MODERN ELEVATED FOOTER ================= -->
+  <footer class="border-t border-black/[0.06] bg-forest-green text-warm-white pb-24 pt-14 md:pb-12">
+    <div class="shell">
+      <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Brand & Vision (5 cols) -->
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-3">
+            <a href="index.html" class="flex items-center">
+              <img src="assets/img/logo-horizontal.png" alt="FruGrade" class="h-10 w-auto brightness-0 invert object-contain" />
+            </a>
+          </div>
+          <p class="mt-3.5 max-w-sm font-body-sm text-[13px] leading-relaxed text-warm-white/75" data-i18n="footer.tagline">
+            Platform cerdas klasifikasi jenis dan kesegaran buah berbasis Convolutional Neural Network (TensorFlow / Keras). Proyek akademik independen untuk edukasi nutrisi dan AI pangan.
+          </p>
 
-      <div class="grid grid-cols-2 gap-8 sm:gap-12">
-        <div>
-          <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Navigasi</p>
-          <ul class="mt-2 space-y-1.5">
-            <li><a href="index.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-forest-green">Home</a></li>
-            <li><a href="upload.html" class="font-body-sm text-body-sm text-on-surface-variant hover:text-forest-green">Scan / Upload</a></li>
-            <li><a href="#how-it-works" class="font-body-sm text-body-sm text-on-surface-variant hover:text-forest-green">Cara Kerja</a></li>
+          <!-- 3 Tech Pills -->
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-sunny-yellow">memory</span>
+              <span>TensorFlow / Keras</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-secondary-fixed">grid_view</span>
+              <span>224 × 224 RGB</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-peach-orange">verified</span>
+              <span>12 Kelas Dataset</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Links (2 cols) -->
+        <div class="lg:col-span-2">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.navTitle">Navigasi</p>
+          <ul class="mt-3.5 space-y-2.5 font-body-sm text-[13px]">
+            <li><a href="index.html" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.home">Beranda</a></li>
+            <li><a href="upload.html" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.scan">Pindai</a></li>
+            <li><a href="#how-it-works" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.how">Cara Kerja</a></li>
+            <li><a href="#fun-fact" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.facts">Fakta Buah</a></li>
           </ul>
         </div>
-        <div>
-          <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Model</p>
-          <ul class="mt-2 space-y-1.5 font-body-sm text-body-sm text-on-surface-variant">
-            <li>Custom CNN (PyTorch)</li>
-            <li>Input 128 × 128 RGB</li>
-            <li>JPG / JPEG / PNG</li>
+
+        <!-- Supported Fruits (3 cols) -->
+        <div class="lg:col-span-3">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.fruitsTitle">Buah Didukung</p>
+          <div class="mt-3.5 flex flex-wrap gap-1.5">
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍎 Apel</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍌 Pisang</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍊 Jeruk</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🥭 Mangga</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍓 Stroberi</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍅 Tomat</span>
+          </div>
+          <p class="mt-2 text-[11px] text-warm-white/60">6 Buah × 2 Kondisi: Fresh &amp; Rotten</p>
+        </div>
+
+        <!-- Model Spec (2 cols) -->
+        <div class="lg:col-span-2">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.modelTitle">Spesifikasi</p>
+          <ul class="mt-3.5 space-y-2 text-[12px] text-warm-white/75 font-mono">
+            <li>Custom CNN v1.0</li>
+            <li>Input: 224 × 224</li>
+            <li>Output: 12 Kelas</li>
+            <li>TensorFlow / Keras</li>
           </ul>
         </div>
       </div>
-    </div>
 
-    <div class="shell mt-8 flex flex-col gap-2 border-t border-black/[0.05] pt-5 sm:flex-row sm:items-center sm:justify-between">
-      <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 FruGrade. Proyek akademik.</p>
-      <p class="font-label-sm text-label-sm text-leaf-green">Empowering Food Quality &amp; Freshness</p>
+      <!-- Footer Bottom Bar -->
+      <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-warm-white/15 pt-6 text-[12px] text-warm-white/70 sm:flex-row">
+        <p data-i18n="footer.copyright">© 2026 FruGrade. Proyek akademik independen.</p>
+        <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3.5 py-1.5 font-label-sm text-[11px] font-semibold text-warm-white transition-all hover:bg-warm-white/20 hover:text-white">
+          <span class="icon text-[14px] -rotate-90">arrow_forward</span>
+          <span data-i18n="footer.backToTop">Kembali ke atas</span>
+        </button>
+      </div>
     </div>
   </footer>
 
   <!-- ================= MOBILE NAV ================= -->
   <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-warm-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Navigasi bawah">
-    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-6">
-      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-strawberry-red" aria-current="page">
-        <span class="icon text-[24px]">home</span>
-        <span>Home</span>
+    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-2">
+      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-strawberry-red" aria-current="page" data-nav="home">
+        <span class="icon text-[22px]">home</span>
+        <span data-i18n="nav.home">Beranda</span>
       </a>
-      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-on-surface-variant">
-        <span class="icon text-[24px]">document_scanner</span>
-        <span>Scan</span>
+      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="scan">
+        <span class="icon text-[22px]">document_scanner</span>
+        <span data-i18n="nav.scan">Pindai</span>
+      </a>
+      <a href="#how-it-works" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="how">
+        <span class="icon text-[22px]">hub</span>
+        <span data-i18n="nav.how">Cara Kerja</span>
+      </a>
+      <a href="#fun-fact" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="facts">
+        <span class="icon text-[22px]">lightbulb</span>
+        <span data-i18n="nav.facts">Fakta Buah</span>
       </a>
     </div>
   </nav>
 
   <script defer src="assets/vendor/gsap.min.js"></script>
   <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script defer src="assets/js/config.js"></script>
-  <script defer src="assets/js/store.js"></script>
-  <script defer src="assets/js/api.js"></script>
-  <script defer src="assets/js/motion.js"></script>
-  <script defer src="assets/js/fruit-friends.js"></script>
+  <script defer src="assets/js/i18n.js?v=9"></script>
+  <script defer src="assets/js/config.js?v=9"></script>
+  <script defer src="assets/js/store.js?v=9"></script>
+  <script defer src="assets/js/api.js?v=9"></script>
+  <script defer src="assets/js/motion.js?v=9"></script>
+  <script defer src="assets/js/fruit-friends.js?v=9"></script>
 </body>
 </html>

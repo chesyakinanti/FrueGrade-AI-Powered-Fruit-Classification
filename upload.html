@@ -1,45 +1,57 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scan / Upload — FruGrade</title>
-  <meta name="description" content="Unggah satu foto buah, periksa pratinjaunya, lalu jalankan prediksi CNN untuk melihat jenis dan status kesegaran." />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Pindai Buah — FruGrade</title>
+  <meta name="description" content="Upload or capture a photo of a fruit, review the preview, then run CNN prediction to determine fruit type and freshness status." />
   <meta name="theme-color" content="#2E5D3A" />
-  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=9" />
 
-  <link rel="stylesheet" href="assets/css/fonts.css" />
-  <link rel="stylesheet" href="assets/css/app.css" />
-  <link rel="stylesheet" href="assets/css/animations.css" />
-  <link rel="stylesheet" href="assets/css/fruit.css" />
+  <link rel="stylesheet" href="assets/css/fonts.css?v=9" />
+  <link rel="stylesheet" href="assets/css/app.css?v=9" />
+  <link rel="stylesheet" href="assets/css/animations.css?v=9" />
+  <link rel="stylesheet" href="assets/css/fruit.css?v=9" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 
 <body class="bg-surface font-body-md text-on-surface" data-page="upload">
-  <a class="skip-link" href="#main">Lewati ke konten</a>
+  <a class="skip-link" href="#main" data-i18n="nav.skip">Lewati ke konten</a>
 
   <!-- ================= HEADER ================= -->
   <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-warm-white/85 backdrop-blur-md">
-    <div class="shell flex h-[72px] items-center justify-between gap-4">
-      <a href="index.html" class="group flex items-center gap-2.5" aria-label="FruGrade — kembali ke Home">
-        <img src="assets/img/logo-mark.png" alt="" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:-rotate-3" width="50" height="94" />
-        <span class="font-headline-sm text-headline-sm tracking-tight text-forest-green">FruGrade</span>
-      </a>
+    <div class="shell relative flex h-[72px] items-center justify-between gap-4">
+      <div class="flex items-center flex-none">
+        <a href="index.html" class="group flex items-center py-1" aria-label="FruGrade — kembali ke Beranda">
+          <img src="assets/img/logo-horizontal.png" alt="FruGrade" class="h-9 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+        </a>
+      </div>
 
-      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
-        <a href="index.html" class="nav-link" data-nav="home">Home</a>
-        <a href="upload.html" class="nav-link" data-nav="scan">Scan / Upload</a>
-        <a href="index.html#how-it-works" class="nav-link" data-nav="how">Cara Kerja</a>
+      <!-- Mathematically Centered Navigation -->
+      <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1.5" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-link" data-nav="home" data-i18n="nav.home">Beranda</a>
+        <a href="upload.html" class="nav-link is-active" data-nav="scan" data-i18n="nav.scan">Pindai</a>
+        <a href="index.html#how-it-works" class="nav-link" data-nav="how" data-i18n="nav.how">Cara Kerja</a>
+        <a href="index.html#fun-fact" class="nav-link" data-nav="facts" data-i18n="nav.facts">Fakta Buah</a>
       </nav>
 
-      <div class="flex items-center gap-2.5">
-        <span class="chip chip-demo hidden sm:inline-flex">
+      <div class="flex items-center gap-2 sm:gap-2.5 flex-none">
+        <!-- Language Switcher ID | EN -->
+        <div class="inline-flex items-center rounded-full bg-surface-container-low p-1 ring-1 ring-black/[0.05]" role="group" aria-label="Language selection">
+          <button type="button" data-lang-btn="id" class="lang-btn active rounded-full px-2.5 py-1 text-label-sm font-bold bg-surface-container-lowest text-forest-green shadow-soft transition-all duration-200" aria-pressed="true">ID</button>
+          <button type="button" data-lang-btn="en" class="lang-btn rounded-full px-2.5 py-1 text-label-sm font-medium text-on-surface-variant hover:text-soft-charcoal transition-all duration-200" aria-pressed="false">EN</button>
+        </div>
+
+        <span class="chip chip-demo hidden lg:inline-flex" data-i18n-title="common.demoTooltip" title="Mode pengembangan: prediksi disimulasikan di browser">
           <span class="icon text-[15px]">science</span>
-          <span data-mode-label>Mode demo</span>
+          <span data-mode-label data-i18n="common.demoMode">Mode demo</span>
         </span>
         <a href="index.html" class="btn-secondary !px-3.5 !py-2 !text-label-md">
-          <span class="icon text-[18px]">arrow_back</span>
-          <span class="hidden sm:inline">Home</span>
+          <span class="icon text-[18px]">home</span>
+          <span class="hidden sm:inline" data-i18n="nav.backHome">Beranda</span>
         </a>
       </div>
     </div>
@@ -50,127 +62,270 @@
     <div class="pointer-events-none absolute -right-20 top-56 h-80 w-80 rounded-full bg-secondary-fixed/25 blur-3xl" aria-hidden="true"></div>
 
     <div class="shell relative py-7 sm:py-10">
-      <!-- breadcrumb -->
+      <!-- Breadcrumb -->
       <nav class="flex flex-wrap items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant" aria-label="Breadcrumb">
         <a href="index.html" class="inline-flex items-center gap-1 transition-colors hover:text-soft-charcoal">
-          <span class="icon text-[16px]">home</span> Home
+          <span class="icon text-[16px]">home</span> <span data-i18n="nav.home">Beranda</span>
         </a>
         <span class="icon text-[14px] text-outline-variant">chevron_right</span>
-        <span class="font-label-md text-label-md text-forest-green">Scan / Upload</span>
+        <span class="font-label-md text-label-md text-forest-green" data-i18n="nav.scan">Pindai</span>
       </nav>
 
-      <!-- title -->
+      <!-- Title Header -->
       <div class="mt-4 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <span class="chip chip-demo mb-3" data-demo-only>
             <span class="icon text-[15px]">science</span>
-            Prediksi disimulasikan — model belum terhubung
+            <span data-i18n="common.demoBanner">Prediksi disimulasikan — model belum terhubung</span>
           </span>
-          <h1 class="font-headline-lg text-[28px] font-bold leading-tight tracking-tight text-forest-green sm:text-[36px]">
-            Unggah foto buah
+          <h1 class="font-headline-lg text-[28px] font-bold leading-tight tracking-tight text-forest-green sm:text-[36px]" data-i18n="upload.title">
+            Unggah atau ambil foto buah
           </h1>
-          <p class="mt-1.5 max-w-2xl font-body-md text-body-md text-on-surface-variant">
-            Pilih satu gambar yang jelas, periksa pratinjaunya, lalu jalankan analisis. Format JPG, JPEG, atau PNG.
+          <p class="mt-1.5 max-w-2xl font-body-md text-body-md text-on-surface-variant" data-i18n="upload.subtitle">
+            Pilih satu gambar yang jelas dari perangkat atau potret langsung menggunakan kamera, periksa pratinjaunya, lalu jalankan analisis. Format JPG, JPEG, atau PNG.
           </p>
         </div>
 
         <div class="flex w-fit items-center gap-2 rounded-xl bg-surface-container px-3.5 py-2.5">
           <span class="icon text-[18px] text-forest-green">image</span>
-          <span class="font-label-md text-label-md font-medium text-soft-charcoal">Satu gambar per analisis</span>
+          <span class="font-label-md text-label-md font-medium text-soft-charcoal" data-i18n="common.oneFruitBadge">Satu gambar per analisis</span>
         </div>
       </div>
 
       <!-- ================= GRID ================= -->
       <div class="mt-7 grid grid-cols-1 items-start gap-5 lg:grid-cols-12 lg:gap-6">
-        <!-- LEFT -->
+        <!-- LEFT: INPUT METHODS -->
         <section class="flex flex-col gap-4 lg:col-span-6" aria-labelledby="step-upload">
           <div class="panel p-5 sm:p-6" data-reveal>
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-center gap-3">
                 <span class="grid h-8 w-8 flex-none place-items-center rounded-full bg-primary-fixed font-headline-sm text-[13px] font-bold text-primary">1</span>
                 <div>
-                  <h2 id="step-upload" class="font-headline-sm text-headline-sm text-forest-green">Pilih gambar buah</h2>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant">Foto asli dari perangkat, bukan screenshot</p>
+                  <h2 id="step-upload" class="font-headline-sm text-headline-sm text-forest-green" data-i18n="upload.step1">Pilih gambar buah</h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant" data-i18n="upload.step1Desc">Foto asli dari perangkat atau kamera, bukan screenshot</p>
                 </div>
               </div>
               <span class="icon text-[22px] text-outline-variant" aria-hidden="true">add_photo_alternate</span>
             </div>
 
-            <!-- dropzone -->
-            <div id="dropzone" class="dropzone group mt-5 flex cursor-pointer flex-col items-center justify-center rounded-2xl bg-warm-white px-5 py-10 text-center shadow-sm"
-                 role="button" tabindex="0" aria-label="Pilih atau letakkan file gambar buah di sini">
-              <input id="file-input" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" class="sr-only" aria-label="Pilih file gambar buah" />
-
-              <span data-mascot="apple" data-size="52" id="upload-mascot" class="mascot-bob pointer-events-none absolute -right-1 -top-6" aria-hidden="true"></span>
-
-              <div class="mb-4 grid h-16 w-16 place-items-center rounded-full bg-surface-container text-primary transition-transform duration-300 group-hover:scale-110">
-                <span class="icon text-[34px]">cloud_upload</span>
-              </div>
-
-              <p class="font-label-lg text-label-lg text-soft-charcoal">Tarik &amp; letakkan foto di sini</p>
-              <p class="mt-1 font-body-md text-body-md text-on-surface-variant">atau klik area ini untuk memilih dari perangkat</p>
-
-              <span class="btn-primary pointer-events-none mt-4 !px-5 !py-2.5 !text-label-md">
-                <span class="icon text-[18px]">folder_open</span>
-                <span>Pilih File</span>
-              </span>
-
-              <p class="mt-4 inline-flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
-                <span class="icon text-[16px] text-border-gray">info</span>
-                JPG, JPEG, PNG • maks 10 MB
-              </p>
+            <!-- Two Input Options: Upload Image & Take Photo Tabs -->
+            <div class="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-surface-container-low p-1.5" role="tablist" aria-label="Input options">
+              <button id="tab-upload" type="button" role="tab" aria-selected="true" aria-controls="view-upload"
+                      class="flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-3 py-2 font-label-md text-label-md font-semibold transition-all duration-200 bg-surface-container-lowest text-forest-green shadow-soft">
+                <span class="icon text-[20px]">cloud_upload</span>
+                <span data-i18n="upload.tabUpload">Upload Gambar</span>
+              </button>
+              <button id="tab-camera" type="button" role="tab" aria-selected="false" aria-controls="view-camera"
+                      class="flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-3 py-2 font-label-md text-label-md font-medium text-on-surface-variant transition-all duration-200 hover:text-soft-charcoal">
+                <span class="icon text-[20px]">photo_camera</span>
+                <span data-i18n="upload.tabCamera">Ambil Foto</span>
+              </button>
             </div>
 
-            <!-- tips -->
+            <!-- Hidden File Inputs -->
+            <input id="file-input" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" class="sr-only" aria-label="Select fruit image file" />
+            <input id="camera-input" type="file" accept="image/*" capture="environment" class="sr-only" aria-label="Take photo with device camera" />
+
+            <!-- Option 1: Upload View (Dropzone) -->
+            <div id="view-upload" role="tabpanel" aria-labelledby="tab-upload" class="mt-4">
+              <div id="dropzone" class="dropzone group flex cursor-pointer flex-col items-center justify-center rounded-2xl bg-warm-white px-5 py-9 text-center shadow-sm"
+                   role="button" tabindex="0" aria-label="Drop fruit photo here or click to choose file">
+                <span data-mascot="apple" data-size="52" id="upload-mascot" class="mascot-bob pointer-events-none absolute -right-1 -top-6" aria-hidden="true"></span>
+
+                <div class="mb-3 grid h-16 w-16 place-items-center rounded-full bg-surface-container text-primary transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[34px]">cloud_upload</span>
+                </div>
+
+                <p class="font-label-lg text-label-lg font-semibold text-soft-charcoal" data-i18n="upload.dropTitle">Tarik &amp; letakkan foto di sini</p>
+                <p class="mt-1 font-body-md text-body-md text-on-surface-variant" data-i18n="upload.dropDesc">atau klik area ini untuk memilih dari perangkat</p>
+
+                <button id="btn-browse-file" type="button" class="btn-primary pointer-events-none mt-4 !px-5 !py-2.5 !text-label-md">
+                  <span class="icon text-[18px]">folder_open</span>
+                  <span data-i18n="upload.browseBtn">Pilih File</span>
+                </button>
+
+                <p class="mt-4 inline-flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+                  <span class="icon text-[16px] text-border-gray">info</span>
+                  <span data-i18n="upload.dropLimit">JPG, JPEG, PNG • maks 10 MB</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Option 2: Live Camera View -->
+            <div id="view-camera" role="tabpanel" aria-labelledby="tab-camera" class="mt-4 hidden" hidden>
+              <div class="relative overflow-hidden rounded-2xl bg-black shadow-md">
+                
+                <!-- Video stream container -->
+                <div class="relative aspect-[4/3] w-full overflow-hidden bg-black sm:aspect-[4/3]">
+                  <video id="camera-video" playsinline autoplay muted class="h-full w-full object-cover"></video>
+                  <canvas id="camera-canvas" class="hidden"></canvas>
+
+                  <!-- Viewfinder Framing Guide Overlay -->
+                  <div class="pointer-events-none absolute inset-0 flex items-center justify-center p-4">
+                    <div class="relative h-48 w-48 sm:h-56 sm:w-56 rounded-2xl border-2 border-dashed border-white/70 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]">
+                      <div class="absolute -top-1 -left-1 h-5 w-5 border-t-4 border-l-4 border-strawberry-red rounded-tl"></div>
+                      <div class="absolute -top-1 -right-1 h-5 w-5 border-t-4 border-r-4 border-strawberry-red rounded-tr"></div>
+                      <div class="absolute -bottom-1 -left-1 h-5 w-5 border-b-4 border-l-4 border-strawberry-red rounded-bl"></div>
+                      <div class="absolute -bottom-1 -right-1 h-5 w-5 border-b-4 border-r-4 border-strawberry-red rounded-br"></div>
+                      <span class="absolute inset-x-0 -bottom-8 text-center font-label-sm text-[12px] font-medium text-white/95 drop-shadow" data-i18n="upload.cameraNotice">
+                        Arahkan kamera ke satu buah di tengah kotak
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Shutter flash animation -->
+                  <div id="camera-flash" class="pointer-events-none absolute inset-0 bg-white opacity-0 transition-opacity duration-150"></div>
+
+                  <!-- Camera loading overlay -->
+                  <div id="camera-loading" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/85 text-white">
+                    <span class="icon animate-spin text-[36px] text-sunny-yellow">progress_activity</span>
+                    <p class="font-label-md text-label-md" data-i18n="upload.connecting">Menghubungkan ke kamera…</p>
+                  </div>
+
+                  <!-- Camera error notice -->
+                  <div id="camera-error" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/90 p-5 text-center text-white hidden" hidden>
+                    <span class="grid h-12 w-12 place-items-center rounded-full bg-error/20 text-error">
+                      <span class="icon text-[28px]">warning</span>
+                    </span>
+                    <p id="camera-error-msg" class="max-w-xs font-body-sm text-body-sm text-white/90">
+                      Izin kamera ditolak atau kamera tidak tersedia.
+                    </p>
+                    <div class="mt-2 flex flex-wrap items-center justify-center gap-2">
+                      <button id="btn-camera-fallback" type="button" class="btn-primary !px-4 !py-2 !text-label-sm">
+                        <span class="icon text-[16px]">photo_camera</span>
+                        <span data-i18n="upload.useAppBtn">Kamera HP</span>
+                      </button>
+                      <button id="btn-camera-switch-upload" type="button" class="btn-secondary !px-4 !py-2 !text-label-sm !text-white !border-white/30 hover:!bg-white/10">
+                        <span class="icon text-[16px]">cloud_upload</span>
+                        <span data-i18n="upload.switchUploadBtn">Upload File</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Camera Control Bar -->
+                <div class="flex items-center justify-between border-t border-white/10 bg-warm-white/95 px-4 py-3 backdrop-blur sm:px-6">
+                  <button id="btn-cancel-camera" type="button" class="btn-ghost !px-3.5 !py-2 !text-label-sm text-soft-charcoal hover:!bg-surface-container" title="Batal dan kembali ke upload" data-i18n-title="upload.cancelBtn">
+                    <span class="icon text-[16px]">arrow_back</span>
+                    <span data-i18n="upload.cancelBtn">Batal</span>
+                  </button>
+
+                  <!-- Big Circular Shutter Button -->
+                  <button id="btn-capture-camera" type="button"
+                          class="group relative flex h-14 w-14 items-center justify-center rounded-full bg-strawberry-red shadow-lg ring-4 ring-strawberry-red/25 transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+                          aria-label="Ambil Foto" title="Ambil Foto" data-i18n-aria="upload.captureBtn" data-i18n-title="upload.captureBtn">
+                    <span class="h-10 w-10 rounded-full border-2 border-white/70 bg-strawberry-red transition-transform group-hover:scale-95"></span>
+                    <span class="icon absolute text-[22px] text-white">photo_camera</span>
+                  </button>
+
+                  <button id="btn-flip-camera" type="button" class="btn-ghost !px-3.5 !py-2 !text-label-sm text-soft-charcoal hover:!bg-surface-container" title="Putar kamera" data-i18n-title="upload.flipBtn">
+                    <span class="icon text-[18px]">cached</span>
+                    <span class="hidden sm:inline" data-i18n="upload.flipBtn">Putar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stability Tips -->
             <div class="mt-4 flex items-start gap-3 rounded-xl bg-surface-container-low p-3.5">
               <span class="grid h-8 w-8 flex-none place-items-center rounded-lg bg-peach-orange/25 text-tertiary">
                 <span class="icon text-[20px]">lightbulb</span>
               </span>
               <div>
-                <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Supaya hasil lebih stabil</p>
-                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+                <p class="font-label-md text-label-md font-semibold text-soft-charcoal" data-i18n="upload.tipsTitle">Supaya hasil lebih stabil</p>
+                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="upload.tipsDesc">
                   Satu buah di tengah frame, latar polos, dan cahaya merata. Hindari bayangan keras atau objek lain yang menutupi buah.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- factual info -->
+          <!-- Modern Bento Specs Deck: Clean, Balanced & Spacious -->
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-3" data-reveal-group>
-            <div data-reveal class="panel px-4 py-3.5">
-              <span class="font-label-sm text-label-sm text-on-surface-variant">Input model</span>
-              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">128 × 128</p>
+            <!-- Card 1: 224 x 224 Input Model -->
+            <div data-reveal class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.06] bg-warm-white/95 p-4 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-peach-orange/40 hover:shadow-card min-h-[145px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-peach-orange/20 text-tertiary transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[19px]">grid_view</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-peach-orange/15 px-2.5 py-0.5 font-label-sm text-[10px] font-bold text-tertiary tracking-wide" data-i18n="upload.factInputBadge">
+                  INPUT MODEL
+                </span>
+              </div>
+              <div class="mt-3">
+                <p class="font-headline-sm text-[22px] font-extrabold leading-none tracking-tight text-soft-charcoal">
+                  224 <span class="text-[13px] font-semibold text-on-surface-variant">× 224 px</span>
+                </p>
+                <p class="mt-1.5 font-body-sm text-[12px] leading-snug text-on-surface-variant" data-i18n="upload.factInputDesc">
+                  Citra RGB 3-channel
+                </p>
+              </div>
             </div>
-            <div data-reveal class="panel px-4 py-3.5">
-              <span class="font-label-sm text-label-sm text-on-surface-variant">Objek</span>
-              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">1 buah</p>
+
+            <!-- Card 2: 1 Buah Objek -->
+            <div data-reveal class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.06] bg-warm-white/95 p-4 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-forest-green/35 hover:shadow-card min-h-[145px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-forest-green/10 text-forest-green transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[19px]">photo_camera</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-forest-green/10 px-2.5 py-0.5 font-label-sm text-[10px] font-bold text-forest-green tracking-wide" data-i18n="upload.factObjectBadge">
+                  1 BUAH
+                </span>
+              </div>
+              <div class="mt-3">
+                <p class="font-headline-sm text-[22px] font-extrabold leading-none tracking-tight text-forest-green">
+                  1 <span class="text-[13px] font-semibold text-forest-green/85" data-i18n="upload.factObjectVal">Buah</span>
+                </p>
+                <p class="mt-1.5 font-body-sm text-[12px] leading-snug text-on-surface-variant" data-i18n="upload.factObjectDesc">
+                  Satu objek buah per analisis
+                </p>
+              </div>
             </div>
-            <div data-reveal class="panel px-4 py-3.5">
-              <span class="font-label-sm text-label-sm text-on-surface-variant">Keluaran</span>
-              <p class="mt-0.5 font-headline-sm text-headline-sm text-forest-green">Jenis + status</p>
+
+            <!-- Card 3: 12 Kelas -->
+            <div data-reveal class="group relative flex flex-col justify-between rounded-2xl border border-black/[0.06] bg-warm-white/95 p-4 shadow-soft backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-strawberry-red/35 hover:shadow-card min-h-[145px]">
+              <div class="flex items-center justify-between">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-strawberry-red/15 text-strawberry-red transition-transform duration-300 group-hover:scale-110">
+                  <span class="icon text-[19px]">category</span>
+                </span>
+                <span class="inline-flex items-center rounded-full bg-strawberry-red/15 px-2.5 py-0.5 font-label-sm text-[10px] font-bold text-strawberry-red tracking-wide" data-i18n="upload.factOutputBadge">
+                  12 KELAS
+                </span>
+              </div>
+              <div class="mt-3">
+                <p class="font-headline-sm text-[22px] font-extrabold leading-none tracking-tight text-strawberry-red">
+                  12 <span class="text-[13px] font-semibold text-strawberry-red/85" data-i18n="upload.factOutputVal">Kelas</span>
+                </p>
+                <p class="mt-1.5 font-body-sm text-[12px] leading-snug text-on-surface-variant" data-i18n="upload.factOutputDesc">
+                  6 jenis buah × 2 kondisi
+                </p>
+              </div>
             </div>
           </div>
 
-          <!-- demo -->
-          <div class="panel p-5" data-reveal data-demo-only>
-            <div class="flex items-start gap-3">
-              <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-tertiary-fixed text-tertiary-container">
+          <!-- Demo Scenarios Card -->
+          <div class="rounded-2xl border border-black/[0.06] bg-warm-white/95 p-5 shadow-soft backdrop-blur-md" data-reveal data-demo-only>
+            <div class="flex items-start gap-3.5">
+              <span class="grid h-10 w-10 flex-none place-items-center rounded-xl bg-forest-green/10 text-forest-green">
                 <span class="icon text-[20px]">science</span>
               </span>
-              <div class="flex-1">
-                <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Belum punya foto? Coba skenario demo</p>
-                <p class="mt-0.5 font-body-sm text-body-sm text-on-surface-variant">
-                  Memakai gambar contoh dan hasil simulasi. Berguna untuk menguji alur tanpa model.
+              <div class="flex-1 min-w-0">
+                <p class="font-label-md text-label-md font-bold text-soft-charcoal" data-i18n="upload.demoTitle">Belum punya foto? Coba skenario demo</p>
+                <p class="mt-1 font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-i18n="upload.demoDesc">
+                  Memakai gambar contoh dan hasil simulasi untuk menguji alur tanpa model backend.
                 </p>
-                <div class="mt-3 flex flex-wrap gap-2">
-                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="fresh" data-fruit="apple">
-                    <span class="icon text-[16px] text-leaf-green">check_circle</span> Contoh segar
+                <div class="mt-3.5 flex flex-wrap gap-2">
+                  <button type="button" class="group inline-flex items-center gap-1.5 rounded-full border border-forest-green/20 bg-forest-green/10 px-3.5 py-1.5 font-label-sm text-label-sm font-semibold text-forest-green shadow-xs transition-all hover:bg-forest-green hover:text-white" data-demo="fresh" data-fruit="apple">
+                    <span class="icon text-[16px]">check_circle</span>
+                    <span data-i18n="upload.demoFresh">Contoh segar</span>
                   </button>
-                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="rotten" data-fruit="banana">
-                    <span class="icon text-[16px] text-error">warning</span> Contoh busuk
+                  <button type="button" class="group inline-flex items-center gap-1.5 rounded-full border border-strawberry-red/20 bg-strawberry-red/10 px-3.5 py-1.5 font-label-sm text-label-sm font-semibold text-strawberry-red shadow-xs transition-all hover:bg-strawberry-red hover:text-white" data-demo="rotten" data-fruit="banana">
+                    <span class="icon text-[16px]">warning</span>
+                    <span data-i18n="upload.demoRotten">Contoh busuk</span>
                   </button>
-                  <button type="button" class="btn-secondary !px-3 !py-1.5 !text-label-sm" data-demo="error" data-fruit="orange">
-                    <span class="icon text-[16px] text-tertiary">error</span> Simulasi gagal
+                  <button type="button" class="group inline-flex items-center gap-1.5 rounded-full border border-peach-orange/30 bg-peach-orange/15 px-3.5 py-1.5 font-label-sm text-label-sm font-semibold text-tertiary shadow-xs transition-all hover:bg-tertiary hover:text-white" data-demo="error" data-fruit="orange">
+                    <span class="icon text-[16px]">error</span>
+                    <span data-i18n="upload.demoError">Simulasi gagal</span>
                   </button>
                 </div>
               </div>
@@ -178,38 +333,38 @@
           </div>
         </section>
 
-        <!-- RIGHT -->
+        <!-- RIGHT: PREVIEW & CONFIRMATION -->
         <section class="flex flex-col gap-4 lg:col-span-6 lg:sticky lg:top-[88px]" aria-labelledby="step-preview">
           <div id="preview-card" class="panel p-5 sm:p-6" data-reveal>
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-center gap-3">
                 <span class="grid h-8 w-8 flex-none place-items-center rounded-full bg-secondary-container font-headline-sm text-[13px] font-bold text-on-secondary-container">2</span>
                 <div>
-                  <h2 id="step-preview" class="font-headline-sm text-headline-sm text-forest-green">Pratinjau &amp; konfirmasi</h2>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant">Pastikan buah terlihat jelas sebelum dianalisis</p>
+                  <h2 id="step-preview" class="font-headline-sm text-headline-sm text-forest-green" data-i18n="upload.step2">Pratinjau &amp; konfirmasi</h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant" data-i18n="upload.step2Desc">Pastikan buah terlihat jelas sebelum dianalisis</p>
                 </div>
               </div>
               <span id="upload-status" class="chip chip-neutral whitespace-nowrap">
-                <span class="dot"></span> Menunggu gambar
+                <span class="dot"></span> <span id="upload-status-text" data-i18n="upload.waitingStatus">Menunggu gambar</span>
               </span>
             </div>
 
-            <!-- empty -->
+            <!-- Empty Preview State -->
             <div id="preview-empty" class="mt-5 flex flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant/60 bg-surface-container-low/60 px-6 py-10 text-center">
               <div class="relative mb-5 h-[104px] w-[128px]">
                 <div class="empty-frame absolute inset-0"></div>
                 <span data-mascot="orange" data-size="62" class="mascot-bob delay-1 absolute -bottom-5 -right-3" aria-hidden="true"></span>
               </div>
-              <p class="font-label-lg text-label-lg text-soft-charcoal">Belum ada gambar terpilih</p>
-              <p class="mt-1 max-w-xs font-body-sm text-body-sm text-on-surface-variant">
-                Setelah kamu memilih foto, pratinjau dan tombol Analyze Fruit akan muncul di sini.
+              <p class="font-label-lg text-label-lg text-soft-charcoal" data-i18n="upload.emptyPreviewTitle">Belum ada gambar terpilih</p>
+              <p class="mt-1 max-w-xs font-body-sm text-body-sm text-on-surface-variant" data-i18n="upload.emptyPreviewDesc">
+                Setelah kamu memilih atau memotret foto, pratinjau dan tombol Analyze Fruit akan muncul di sini.
               </p>
             </div>
 
-            <!-- filled -->
+            <!-- Filled Preview State -->
             <div id="preview-filled" class="mt-5 is-hidden" hidden>
               <div class="preview-media relative aspect-[4/3] overflow-hidden rounded-2xl bg-light-gray shadow-inner is-shown">
-                <img id="preview-image" alt="Pratinjau foto buah" class="h-full w-full object-cover" />
+                <img id="preview-image" alt="Fruit photo preview" class="h-full w-full object-cover" />
                 <div id="preview-scan" class="scan-frame pointer-events-none absolute inset-0 is-hidden" aria-hidden="true"></div>
 
                 <div class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/75 via-black/25 to-transparent p-4">
@@ -218,44 +373,49 @@
                     <p id="file-meta" class="font-body-sm text-body-sm text-white/75">—</p>
                   </div>
                   <span class="chip !bg-forest-green/90 !text-white backdrop-blur">
-                    <span class="icon text-[14px]">center_focus_strong</span> Fokus
+                    <span class="icon text-[14px]">center_focus_strong</span> <span data-i18n="upload.focusBadge">Fokus</span>
                   </span>
                 </div>
               </div>
 
+              <!-- Media details & actions bar -->
               <div class="mt-3 flex flex-col gap-3 rounded-xl bg-surface-container-low p-3 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex min-w-0 items-center gap-3">
                   <span class="grid h-10 w-10 flex-none place-items-center rounded-lg bg-surface-container text-forest-green">
                     <span class="icon text-[22px]">image</span>
                   </span>
                   <div class="min-w-0">
-                    <p class="font-label-md text-label-md font-semibold text-soft-charcoal">Gambar siap dianalisis</p>
-                    <p class="truncate font-body-sm text-body-sm text-on-surface-variant">Resolusi <span id="file-dims">—</span> px</p>
+                    <p class="font-label-md text-label-md font-semibold text-soft-charcoal" data-i18n="upload.readyCardTitle">Gambar siap dianalisis</p>
+                    <p class="truncate font-body-sm text-body-sm text-on-surface-variant"><span data-i18n="upload.resolutionLabel">Resolusi</span> <span id="file-dims">—</span> px</p>
                   </div>
                 </div>
-                <div class="flex items-center gap-1.5">
-                  <button id="btn-replace" type="button" class="btn-ghost !py-1.5 !text-label-sm">
-                    <span class="icon text-[16px]">cached</span> Ganti
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <button id="btn-replace" type="button" class="btn-ghost !py-1.5 !text-label-sm" title="Pilih file gambar lain" data-i18n-title="upload.changeBtn">
+                    <span class="icon text-[16px]">folder_open</span> <span data-i18n="upload.changeBtn">Ganti File</span>
                   </button>
-                  <button id="btn-remove" type="button" class="btn-ghost !py-1.5 !text-label-sm !text-error hover:!bg-error-container/40">
-                    <span class="icon text-[16px]">delete</span> Hapus
+                  <button id="btn-retake-camera" type="button" class="btn-ghost !py-1.5 !text-label-sm !text-forest-green hover:!bg-forest-green/10" title="Foto ulang dengan kamera" data-i18n-title="upload.retakeBtn">
+                    <span class="icon text-[16px]">photo_camera</span> <span data-i18n="upload.retakeBtn">Foto Ulang</span>
+                  </button>
+                  <button id="btn-remove" type="button" class="btn-ghost !py-1.5 !text-label-sm !text-error hover:!bg-error-container/40" title="Hapus gambar" data-i18n-title="upload.removeBtn">
+                    <span class="icon text-[16px]">delete</span> <span data-i18n="upload.removeBtn">Hapus</span>
                   </button>
                 </div>
               </div>
 
+              <!-- Analyze Action Button -->
               <div class="mt-4">
                 <button id="analyze-btn" type="button" class="btn-primary w-full" disabled aria-disabled="true">
                   <span class="icon text-[22px]">auto_awesome</span>
-                  <span>Analyze Fruit</span>
+                  <span data-i18n="upload.analyzeBtn">Analisis Buah</span>
                 </button>
-                <p id="analyze-hint" class="mt-2 text-center font-body-sm text-body-sm text-on-surface-variant">
-                  Pilih gambar terlebih dahulu untuk mengaktifkan analisis.
+                <p id="analyze-hint" class="mt-2 text-center font-body-sm text-body-sm text-on-surface-variant" data-i18n="upload.hintEmpty">
+                  Pilih atau potret gambar terlebih dahulu untuk mengaktifkan analisis.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- processing -->
+          <!-- Processing Progress Panel -->
           <div id="processing" class="panel is-hidden p-5 sm:p-6" hidden aria-live="polite">
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-3">
@@ -265,8 +425,8 @@
                   <span class="orbit-item"><span data-mascot="banana" data-size="22"></span></span>
                 </div>
                 <div>
-                  <p class="font-label-lg text-label-lg text-soft-charcoal">Sedang menganalisis…</p>
-                  <p id="progress-label" class="font-body-sm text-body-sm text-on-surface-variant">Menyiapkan citra…</p>
+                  <p class="font-label-lg text-label-lg text-soft-charcoal" data-i18n="upload.processingTitle">Sedang menganalisis…</p>
+                  <p id="progress-label" class="font-body-sm text-body-sm text-on-surface-variant" data-i18n="upload.stage1">Validasi format &amp; keterbacaan…</p>
                 </div>
               </div>
               <span id="progress-pct" class="font-headline-sm text-headline-sm font-bold text-forest-green">0%</span>
@@ -279,24 +439,24 @@
             <div id="stage-list" class="mt-4 grid gap-2.5 sm:grid-cols-2">
               <div data-stage class="stage-item">
                 <span class="stage-icon">1</span>
-                <span class="font-body-sm text-body-sm">Validasi format &amp; keterbacaan</span>
+                <span class="font-body-sm text-body-sm" data-i18n="upload.stage1">Validasi format &amp; keterbacaan</span>
               </div>
               <div data-stage class="stage-item">
                 <span class="stage-icon">2</span>
-                <span class="font-body-sm text-body-sm">Preprocessing 128 × 128 RGB</span>
+                <span class="font-body-sm text-body-sm" data-i18n="upload.stage2">Preprocessing 224 × 224 RGB</span>
               </div>
               <div data-stage class="stage-item">
                 <span class="stage-icon">3</span>
-                <span class="font-body-sm text-body-sm">Inferensi CNN</span>
+                <span class="font-body-sm text-body-sm" data-i18n="upload.stage3">Inferensi CNN TensorFlow / Keras</span>
               </div>
               <div data-stage class="stage-item">
                 <span class="stage-icon">4</span>
-                <span class="font-body-sm text-body-sm">Menghitung confidence</span>
+                <span class="font-body-sm text-body-sm" data-i18n="upload.stage4">Menghitung confidence 12 kelas</span>
               </div>
             </div>
           </div>
 
-          <!-- error -->
+          <!-- Error Alert Panel -->
           <div id="error-panel" class="is-hidden rounded-2xl border border-error/25 bg-error-container/40 p-5" hidden role="alert">
             <div class="flex items-start gap-3">
               <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-error text-on-error">
@@ -304,60 +464,62 @@
               </span>
               <div class="flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <p class="font-label-lg text-label-lg text-on-error-container">Analisis gagal</p>
+                  <p class="font-label-lg text-label-lg text-on-error-container" data-i18n="upload.errorTitle">Analisis gagal</p>
                   <span id="error-code" class="chip !bg-error/10 !px-2 !py-0.5 !text-[10px] !font-semibold uppercase !tracking-wider !text-on-error-container">ERROR</span>
                 </div>
                 <p id="error-message" class="mt-1 font-body-sm text-body-sm leading-relaxed text-on-error-container/85">
-                  Terjadi kesalahan saat memproses gambar.
+                  Terjadi kendala saat memproses gambar.
                 </p>
                 <button id="error-retry" type="button" class="btn-secondary mt-3 !px-3.5 !py-2 !text-label-sm">
-                  <span class="icon text-[16px]">refresh</span> Coba lagi
+                  <span class="icon text-[16px]">refresh</span> <span data-i18n="upload.retryBtn">Coba lagi</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="panel p-5" data-reveal>
-            <div class="flex items-start gap-3">
-              <span class="grid h-9 w-9 flex-none place-items-center rounded-lg bg-secondary-container text-forest-green">
+          <!-- Model Evaluation Notes -->
+          <div class="rounded-2xl border border-black/[0.06] bg-warm-white/95 p-5 shadow-soft backdrop-blur-md" data-reveal>
+            <div class="flex items-start gap-3.5">
+              <span class="grid h-10 w-10 flex-none place-items-center rounded-xl bg-forest-green/10 text-forest-green">
                 <span class="icon text-[20px]">psychology</span>
               </span>
               <div>
-                <h3 class="font-label-lg text-label-lg font-semibold text-soft-charcoal">Apa yang dinilai model</h3>
-                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
-                  Model membaca pola visual dari citra 128 × 128 — bukan rasa atau aroma buah.
+                <h3 class="font-label-lg text-label-lg font-bold text-soft-charcoal" data-i18n="upload.evalTitle">Apa yang dinilai model</h3>
+                <p class="mt-0.5 font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="upload.evalDesc">
+                  Model membaca pola visual dari citra 224 × 224 — bukan rasa atau aroma buah.
                 </p>
               </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-3 gap-2">
-              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+            <div class="mt-4 grid grid-cols-3 gap-2.5">
+              <div class="rounded-xl border border-black/[0.03] bg-white/80 px-2 py-3 text-center shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
                 <span class="icon text-[22px] text-strawberry-red">palette</span>
-                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Warna</p>
-                <p class="font-[10px] leading-tight text-on-surface-variant">Perubahan pigmen</p>
+                <p class="mt-1 font-label-sm text-label-sm font-bold text-soft-charcoal" data-i18n="upload.colorTitle">Warna</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant" data-i18n="upload.colorDesc">Perubahan pigmen</p>
               </div>
-              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+              <div class="rounded-xl border border-black/[0.03] bg-white/80 px-2 py-3 text-center shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
                 <span class="icon text-[22px] text-tertiary">texture</span>
-                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Tekstur</p>
-                <p class="font-[10px] leading-tight text-on-surface-variant">Kerutan &amp; bercak</p>
+                <p class="mt-1 font-label-sm text-label-sm font-bold text-soft-charcoal" data-i18n="upload.textureTitle">Tekstur</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant" data-i18n="upload.textureDesc">Kerutan &amp; bercak</p>
               </div>
-              <div class="rounded-xl bg-surface-container-low px-2 py-3 text-center">
+              <div class="rounded-xl border border-black/[0.03] bg-white/80 px-2 py-3 text-center shadow-xs transition-transform duration-200 hover:-translate-y-0.5">
                 <span class="icon text-[22px] text-forest-green">category</span>
-                <p class="mt-1 font-label-sm text-label-sm font-semibold text-soft-charcoal">Bentuk</p>
-                <p class="font-[10px] leading-tight text-on-surface-variant">Siluet buah</p>
+                <p class="mt-1 font-label-sm text-label-sm font-bold text-soft-charcoal" data-i18n="upload.shapeTitle">Bentuk</p>
+                <p class="font-[10px] leading-tight text-on-surface-variant" data-i18n="upload.shapeDesc">Siluet buah</p>
               </div>
             </div>
 
-            <p class="mt-3 flex items-start gap-1.5 font-body-sm text-[11px] leading-relaxed text-on-surface-variant">
+            <p class="mt-3.5 flex items-start gap-1.5 font-body-sm text-[11px] leading-relaxed text-on-surface-variant">
               <span class="icon mt-0.5 text-[14px] text-border-gray">info</span>
-              Model tidak mengukur rasa, aroma, atau kandungan gizi. Hasil tetap perlu dicek secara fisik.
+              <span data-i18n="upload.evalNote">Model tidak mengukur rasa, aroma, atau kandungan gizi. Hasil tetap perlu dicek secara fisik.</span>
             </p>
           </div>
 
+          <!-- Session Storage Notice -->
           <div class="flex items-start gap-2.5 px-1" data-reveal>
             <span class="icon mt-0.5 text-[18px] text-leaf-green">verified_user</span>
-            <p class="font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
-              Hasil disimpan sementara di tab ini saja. Menutup tab atau menekan <strong class="font-medium text-soft-charcoal">Scan Another Fruit</strong> akan menghapusnya.
+            <p class="font-body-sm text-body-sm leading-relaxed text-on-surface-variant" data-i18n="upload.sessionNotice" data-i18n-html>
+              Hasil disimpan sementara di tab ini saja. Menutup tab atau menekan <strong>Pindai Buah Lain</strong> akan menghapusnya.
             </p>
           </div>
         </section>
@@ -365,35 +527,116 @@
     </div>
   </main>
 
-  <!-- ================= FOOTER (ringkas) ================= -->
-  <footer class="border-t border-black/[0.05] bg-surface-container-low pb-24 pt-6 md:pb-6">
-    <div class="shell flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 FruGrade. Proyek akademik — hasil prediksi bukan jaminan kualitas.</p>
-      <a href="index.html" class="font-label-sm text-label-sm text-forest-green hover:underline">Kembali ke Home</a>
+  <!-- ================= MODERN ELEVATED FOOTER ================= -->
+  <footer class="border-t border-black/[0.06] bg-forest-green text-warm-white pb-24 pt-14 md:pb-12">
+    <div class="shell">
+      <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Brand & Vision (5 cols) -->
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-3">
+            <a href="index.html" class="flex items-center">
+              <img src="assets/img/logo-horizontal.png" alt="FruGrade" class="h-10 w-auto brightness-0 invert object-contain" />
+            </a>
+          </div>
+          <p class="mt-3.5 max-w-sm font-body-sm text-[13px] leading-relaxed text-warm-white/75" data-i18n="footer.tagline">
+            Platform cerdas klasifikasi jenis dan kesegaran buah berbasis Convolutional Neural Network (TensorFlow / Keras). Proyek akademik independen untuk edukasi nutrisi dan AI pangan.
+          </p>
+
+          <!-- 3 Tech Pills -->
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-sunny-yellow">memory</span>
+              <span>TensorFlow / Keras</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-secondary-fixed">grid_view</span>
+              <span>224 × 224 RGB</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3 py-1 font-label-sm text-[11px] font-semibold text-warm-white backdrop-blur">
+              <span class="icon text-[13px] text-peach-orange">verified</span>
+              <span>12 Kelas Dataset</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Links (2 cols) -->
+        <div class="lg:col-span-2">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.navTitle">Navigasi</p>
+          <ul class="mt-3.5 space-y-2.5 font-body-sm text-[13px]">
+            <li><a href="index.html" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.home">Beranda</a></li>
+            <li><a href="upload.html" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.scan">Pindai</a></li>
+            <li><a href="index.html#how-it-works" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.how">Cara Kerja</a></li>
+            <li><a href="index.html#fun-fact" class="text-warm-white/80 transition-colors hover:text-warm-white hover:underline" data-i18n="nav.facts">Fakta Buah</a></li>
+          </ul>
+        </div>
+
+        <!-- Supported Fruits (3 cols) -->
+        <div class="lg:col-span-3">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.fruitsTitle">Buah Didukung</p>
+          <div class="mt-3.5 flex flex-wrap gap-1.5">
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍎 Apel</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍌 Pisang</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍊 Jeruk</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🥭 Mangga</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍓 Stroberi</span>
+            <span class="inline-flex items-center gap-1 rounded-lg bg-warm-white/10 px-2.5 py-1 text-[12px] text-warm-white/90">🍅 Tomat</span>
+          </div>
+          <p class="mt-2 text-[11px] text-warm-white/60">6 Buah × 2 Kondisi: Fresh &amp; Rotten</p>
+        </div>
+
+        <!-- Model Spec (2 cols) -->
+        <div class="lg:col-span-2">
+          <p class="font-headline-sm text-[14px] font-bold uppercase tracking-wider text-sunny-yellow" data-i18n="footer.modelTitle">Spesifikasi</p>
+          <ul class="mt-3.5 space-y-2 text-[12px] text-warm-white/75 font-mono">
+            <li>Custom CNN v1.0</li>
+            <li>Input: 224 × 224</li>
+            <li>Output: 12 Kelas</li>
+            <li>TensorFlow / Keras</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer Bottom Bar -->
+      <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-warm-white/15 pt-6 text-[12px] text-warm-white/70 sm:flex-row">
+        <p data-i18n="footer.copyright">© 2026 FruGrade. Proyek akademik independen.</p>
+        <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group inline-flex items-center gap-1.5 rounded-full bg-warm-white/10 px-3.5 py-1.5 font-label-sm text-[11px] font-semibold text-warm-white transition-all hover:bg-warm-white/20 hover:text-white">
+          <span class="icon text-[14px] -rotate-90">arrow_forward</span>
+          <span data-i18n="footer.backToTop">Kembali ke atas</span>
+        </button>
+      </div>
     </div>
   </footer>
 
   <!-- ================= MOBILE NAV ================= -->
   <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-warm-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Navigasi bawah">
-    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-6">
-      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-on-surface-variant">
-        <span class="icon text-[24px]">home</span>
-        <span>Home</span>
+    <div class="mx-auto flex h-16 max-w-md items-center justify-around px-2">
+      <a href="index.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="home">
+        <span class="icon text-[22px]">home</span>
+        <span data-i18n="nav.home">Beranda</span>
       </a>
-      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-4 font-label-sm text-label-sm text-strawberry-red" aria-current="page">
-        <span class="icon text-[24px]">document_scanner</span>
-        <span>Scan</span>
+      <a href="upload.html" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-strawberry-red" aria-current="page" data-nav="scan">
+        <span class="icon text-[22px]">document_scanner</span>
+        <span data-i18n="nav.scan">Pindai</span>
+      </a>
+      <a href="index.html#how-it-works" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="how">
+        <span class="icon text-[22px]">hub</span>
+        <span data-i18n="nav.how">Cara Kerja</span>
+      </a>
+      <a href="index.html#fun-fact" class="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 px-2 font-label-sm text-[11px] text-on-surface-variant hover:text-forest-green" data-nav="facts">
+        <span class="icon text-[22px]">lightbulb</span>
+        <span data-i18n="nav.facts">Fakta Buah</span>
       </a>
     </div>
   </nav>
 
   <script defer src="assets/vendor/gsap.min.js"></script>
   <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script defer src="assets/js/config.js"></script>
-  <script defer src="assets/js/store.js"></script>
-  <script defer src="assets/js/api.js"></script>
-  <script defer src="assets/js/motion.js"></script>
-  <script defer src="assets/js/fruit-friends.js"></script>
-  <script defer src="assets/js/upload.js"></script>
+  <script defer src="assets/js/i18n.js?v=9"></script>
+  <script defer src="assets/js/config.js?v=9"></script>
+  <script defer src="assets/js/store.js?v=9"></script>
+  <script defer src="assets/js/api.js?v=9"></script>
+  <script defer src="assets/js/motion.js?v=9"></script>
+  <script defer src="assets/js/fruit-friends.js?v=9"></script>
+  <script defer src="assets/js/upload.js?v=9"></script>
 </body>
 </html>

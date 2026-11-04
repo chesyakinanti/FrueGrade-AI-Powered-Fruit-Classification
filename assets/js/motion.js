@@ -50,15 +50,162 @@
     }
   }
 
-  /* ---------------- active nav ---------------- */
+  /* ---------------- active nav & scrollspy ---------------- */
   function initNav() {
-    var page = document.body.getAttribute('data-page');
-    $$('[data-nav]').forEach(function (link) {
-      var key = link.getAttribute('data-nav');
-      var active = (key === 'home' && page === 'home') || (key === 'scan' && page !== 'home');
-      if (active) {
-        link.classList.add('is-active');
-        link.setAttribute('aria-current', 'page');
+    var page = document.body.getAttribute('data-page') || 'home';
+    var isHome = page === 'home';
+    var navLinks = $$('[data-nav]');
+    var currentActive = null;
+
+    function setActive(key) {
+      if (currentActive === key) return;
+      currentActive = key;
+
+      navLinks.forEach(function (link) {
+        var linkKey = link.getAttribute('data-nav');
+        var isActive = (linkKey === key);
+
+        // Desktop nav links (.nav-link)
+        if (link.classList.contains('nav-link')) {
+          link.classList.toggle('is-active', isActive);
+          if (isActive) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        }
+
+        // Mobile bottom nav links
+        var isMobile = link.closest && link.closest('nav[aria-label="Navigasi bawah"]');
+        if (isMobile) {
+          if (isActive) {
+            link.classList.add('text-strawberry-red');
+            link.classList.remove('text-on-surface-variant');
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.classList.remove('text-strawberry-red');
+            link.classList.add('text-on-surface-variant');
+            link.removeAttribute('aria-current');
+          }
+        }
+      });
+    }
+
+    if (!isHome) {
+      if (page === 'upload') {
+        setActive('scan');
+      } else {
+        setActive(null);
+      }
+      return;
+    }
+
+    // HOME PAGE: Smooth ScrollSpy with viewport-relative tracking
+    var howSection = document.getElementById('how-it-works');
+    var factsSection = document.getElementById('fun-fact');
+    var scrollLock = false;
+    var scrollLockTimer = null;
+
+    function lockActive(key) {
+      setActive(key);
+      scrollLock = true;
+      if (scrollLockTimer) clearTimeout(scrollLockTimer);
+      scrollLockTimer = setTimeout(function () {
+        scrollLock = false;
+      }, 850);
+    }
+
+    function calculateActiveSection() {
+      var scrollY = window.scrollY || window.pageYOffset || 0;
+      var docHeight = document.documentElement.scrollHeight;
+      var winHeight = window.innerHeight;
+
+      // 1. When near bottom of page (within 80px), facts is always active
+      if (winHeight + scrollY >= docHeight - 80) {
+        return 'facts';
+      }
+
+      // 2. Viewport-relative reading line (header 72px + offset)
+      var triggerY = 220;
+
+      if (factsSection) {
+        var fRect = factsSection.getBoundingClientRect();
+        if (fRect.top <= triggerY) {
+          return 'facts';
+        }
+      }
+
+      if (howSection) {
+        var hRect = howSection.getBoundingClientRect();
+        if (hRect.top <= triggerY) {
+          return 'how';
+        }
+      }
+
+      return 'home';
+    }
+
+    // Smooth 60fps Scroll Listener
+    var ticking = false;
+    function onScroll() {
+      if (scrollLock) return;
+      if (!ticking) {
+        window.requestAnimationFrame(function () {
+          if (!scrollLock) {
+            setActive(calculateActiveSection());
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Handle initial hash in URL or initial scroll position
+    var hash = window.location.hash;
+    if (hash === '#how-it-works') {
+      lockActive('how');
+    } else if (hash === '#fun-fact') {
+      lockActive('facts');
+    } else {
+      setActive(calculateActiveSection());
+    }
+
+    // Instant click updates for all anchor links to sections
+    $$('a[href]').forEach(function (link) {
+      var href = link.getAttribute('href') || '';
+      var isHow = href === '#how-it-works' || href.endsWith('index.html#how-it-works');
+      var isFacts = href === '#fun-fact' || href.endsWith('index.html#fun-fact');
+      var isHomeLink = isHome && (link.getAttribute('data-nav') === 'home' || href === 'index.html' || href === '#main' || href === '#');
+
+      if (isHow && howSection) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          lockActive('how');
+          howSection.scrollIntoView({ behavior: 'smooth' });
+          if (history.pushState) {
+            history.pushState(null, null, '#how-it-works');
+          }
+        });
+      } else if (isFacts && factsSection) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          lockActive('facts');
+          factsSection.scrollIntoView({ behavior: 'smooth' });
+          if (history.pushState) {
+            history.pushState(null, null, '#fun-fact');
+          }
+        });
+      } else if (isHomeLink && link.closest('header, nav')) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          lockActive('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (history.pushState) {
+            history.pushState(null, null, window.location.pathname);
+          }
+        });
       }
     });
   }
@@ -250,6 +397,7 @@
       if (href.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/.test(href)) return;
       if (link.target === '_blank' || link.hasAttribute('download')) return;
       if (link.hostname && link.hostname !== window.location.hostname) return;
+      if (link.pathname === window.location.pathname && (link.hash || (document.body.getAttribute('data-page') === 'home' && link.getAttribute('data-nav') === 'home'))) return;
 
       link.addEventListener('click', function (e) {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
