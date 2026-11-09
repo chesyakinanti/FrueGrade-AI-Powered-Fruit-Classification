@@ -20,14 +20,14 @@ function getTabs(port) {
   });
 }
 
-async function capture(width, height, outFile) {
+async function capture(width, height, outFile, targetUrl = 'http://localhost:4321/') {
   const port = 9333;
   const edge = spawn(edgePath, [
     '--headless=new',
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${profileDir}`,
     `--window-size=${width},${height}`,
-    'http://localhost:4321/'
+    targetUrl
   ]);
 
   try {
@@ -80,8 +80,8 @@ async function capture(width, height, outFile) {
 }
 
 async function main() {
-  console.log('Capturing full mobile view (375x1800)...');
-  await capture(375, 1800, path.join(__dirname, 'verified_mobile_full.png'));
+  console.log('Capturing upload notice view (1280x900)...');
+  await capture(1280, 900, path.join(__dirname, 'verified_upload_notice.png'), 'http://localhost:4321/upload.html');
   console.log('Done!');
 }
 

@@ -137,19 +137,26 @@
       'upload.step2': 'Pratinjau & konfirmasi',
       'upload.step2Desc': 'Pastikan buah terlihat jelas sebelum dianalisis',
       'upload.waitingStatus': 'Menunggu gambar',
-      'upload.readyStatus': 'Siap dianalisis',
+      'upload.readyStatus': 'Gambar siap dianalisis',
+      'upload.corruptedStatus': 'Berkas rusak / korup',
+      'upload.demoErrorStatus': 'Skenario simulasi kegagalan',
       'upload.emptyPreviewTitle': 'Belum ada gambar terpilih',
-      'upload.emptyPreviewDesc': 'Setelah kamu memilih atau memotret foto, pratinjau dan tombol Analisis Buah akan muncul di sini.',
+      'upload.emptyPreviewDesc': 'Setelah kamu memilih atau memotret foto, pratinjau dan tombol Pindai Buah akan muncul di sini.',
       'upload.focusBadge': 'Fokus',
       'upload.readyCardTitle': 'Gambar siap dianalisis',
+      'upload.corruptedCardTitle': 'Berkas gambar rusak',
+      'upload.demoErrorCardTitle': 'Skenario simulasi kegagalan',
       'upload.resolutionLabel': 'Resolusi',
       'upload.changeBtn': 'Ganti File',
       'upload.retakeBtn': 'Foto Ulang',
       'upload.removeBtn': 'Hapus',
-      'upload.analyzeBtn': 'Analisis Buah',
-      'upload.analyzingBtn': 'Menganalisis…',
-      'upload.hintEmpty': 'Pilih atau potret gambar terlebih dahulu untuk mengaktifkan analisis.',
-      'upload.hintReady': 'Gambar siap diproses oleh model CNN.',
+      'upload.analyzeBtn': 'Pindai Buah',
+      'upload.analyzingBtn': 'Memindai…',
+      'upload.hintEmpty': 'Pilih atau potret gambar terlebih dahulu untuk mengaktifkan pemindaian.',
+      'upload.hintReady': 'Gambar siap dianalisis. Klik tombol untuk memulai pemindaian.',
+      'upload.hintCorruptedReady': 'Contoh gambar rusak dimuat. Klik Pindai Buah untuk menguji simulasi penanganan error.',
+      'upload.hintCorruptedBlocked': 'Berkas gambar rusak tidak dapat dianalisis. Silakan ganti gambar atau pilih skenario lain.',
+      'upload.hintDemoErrorReady': 'Skenario simulasi siap. Klik Pindai Buah untuk menguji simulasi kegagalan proses.',
       'upload.hintBusy': 'Model sedang memproses gambar. Jangan tutup halaman ini.',
       'upload.processingTitle': 'Sedang menganalisis…',
       'upload.stage1': 'Validasi format & keterbacaan',
@@ -209,6 +216,7 @@
       'result.copySummary': 'Salin ringkasan',
       'result.copied': 'Tersalin!',
       'result.copySuccess': 'Ringkasan disalin ke clipboard.',
+      'result.copyBlocked': 'Akses papan klip diblokir. Silakan salin manual.',
       'result.usageNoteTitle': 'Catatan penggunaan',
       'result.usageNoteDesc': 'Hasil ini keluaran model pada satu gambar, bukan diagnosis atau jaminan kualitas pangan. Untuk keputusan distribusi atau konsumsi, tetap lakukan pemeriksaan fisik.',
 
@@ -235,6 +243,17 @@
       'fruit.fresh': 'Segar',
       'fruit.rotten': 'Busuk',
 
+      // Supported Fruits Section
+      'fruits.badge': 'KATALOG BUAH',
+      'fruits.title': 'Buah yang Dapat Dianalisis',
+      'fruits.subtitle': 'FruGrade mengklasifikasikan 6 jenis buah ke dalam 2 kondisi mutu: Segar dan Busuk (total 12 kelas).',
+      'fruits.freshBadge': 'Segar',
+      'fruits.rottenBadge': 'Busuk',
+      'fruits.conditions': 'Kondisi:',
+
+      // Upload helper notice
+      'upload.supportedNotice': 'FruGrade mendukung 6 jenis buah: Apel, Pisang, Mangga, Jeruk, Stroberi, dan Tomat. Setiap buah diklasifikasikan ke dalam kondisi Segar atau Busuk.',
+
       // Camera & File Validation Messages
       'msg.cameraPermissionDenied': 'Izin kamera ditolak. Berikan izin di setelan browser atau gunakan opsi Upload Gambar.',
       'msg.cameraNotFound': 'Tidak ada kamera yang terdeteksi di perangkat ini. Silakan gunakan opsi Upload Gambar.',
@@ -252,6 +271,8 @@
       'msg.imageTooSmall': 'Resolusi gambar terlalu kecil. Minimal 64 × 64 piksel.',
       'msg.unreadableImage': 'Gambar tidak dapat dibaca. Coba file lain dengan format JPG atau PNG.',
       'msg.predictionFailed': 'Prediksi gagal. Coba lagi dengan gambar lain.',
+      'msg.demoSimulatedError': 'Simulasi gagal: Terjadi kesalahan yang disimulasikan untuk menguji penanganan error. Model tidak menghasilkan prediksi.',
+      'msg.demoCorruptedError': 'Simulasi gagal: Berkas gambar rusak atau korup sehingga tidak dapat dianalisis oleh model CNN. Silakan coba lagi dengan foto yang jelas.',
       'msg.sampleLoadFailed': 'Gagal memuat contoh. Jalankan lewat server lokal (npm run dev).'
     },
 
@@ -379,19 +400,26 @@
       'upload.step2': 'Preview & confirmation',
       'upload.step2Desc': 'Make sure the fruit is clearly visible before analyzing',
       'upload.waitingStatus': 'Waiting for image',
-      'upload.readyStatus': 'Ready to analyze',
+      'upload.readyStatus': 'Image Ready',
+      'upload.corruptedStatus': 'Corrupted file',
+      'upload.demoErrorStatus': 'Failure simulation scenario',
       'upload.emptyPreviewTitle': 'No image selected yet',
-      'upload.emptyPreviewDesc': 'Once you select or capture a photo, the preview and Analyze Fruit button will appear here.',
+      'upload.emptyPreviewDesc': 'Once you select or capture a photo, the preview and Scan Fruit button will appear here.',
       'upload.focusBadge': 'Focused',
       'upload.readyCardTitle': 'Image ready for analysis',
+      'upload.corruptedCardTitle': 'Corrupted image file',
+      'upload.demoErrorCardTitle': 'Failure simulation scenario',
       'upload.resolutionLabel': 'Resolution',
       'upload.changeBtn': 'Change Image',
       'upload.retakeBtn': 'Retake',
       'upload.removeBtn': 'Remove',
-      'upload.analyzeBtn': 'Analyze Fruit',
-      'upload.analyzingBtn': 'Analyzing…',
-      'upload.hintEmpty': 'Choose or capture an image first to enable analysis.',
-      'upload.hintReady': 'Image ready to be processed by CNN model.',
+      'upload.analyzeBtn': 'Scan Fruit',
+      'upload.analyzingBtn': 'Scanning…',
+      'upload.hintEmpty': 'Choose or capture an image first to enable scanning.',
+      'upload.hintReady': 'Image ready. Click the button to start scanning.',
+      'upload.hintCorruptedReady': 'Corrupted sample image loaded. Click Scan Fruit to test error handling simulation.',
+      'upload.hintCorruptedBlocked': 'Corrupted image file cannot be analyzed. Please replace the image or choose another scenario.',
+      'upload.hintDemoErrorReady': 'Simulation scenario ready. Click Scan Fruit to test process failure simulation.',
       'upload.hintBusy': 'Model is processing the image. Please keep this page open.',
       'upload.processingTitle': 'Analyzing fruit…',
       'upload.stage1': 'Validating format & readability',
@@ -451,6 +479,7 @@
       'result.copySummary': 'Copy summary',
       'result.copied': 'Copied!',
       'result.copySuccess': 'Summary copied to clipboard.',
+      'result.copyBlocked': 'Clipboard blocked. Please copy manually.',
       'result.usageNoteTitle': 'Usage notes',
       'result.usageNoteDesc': 'This result is a model prediction from a single image, not a diagnostic or food quality guarantee. Physical inspection remains authoritative.',
 
@@ -477,6 +506,17 @@
       'fruit.fresh': 'Fresh',
       'fruit.rotten': 'Rotten',
 
+      // Supported Fruits Section
+      'fruits.badge': 'FRUIT CATALOG',
+      'fruits.title': 'Supported Fruit Types',
+      'fruits.subtitle': 'FruGrade classifies 6 fruit types into 2 quality states: Fresh and Rotten (12 classes total).',
+      'fruits.freshBadge': 'Fresh',
+      'fruits.rottenBadge': 'Rotten',
+      'fruits.conditions': 'Conditions:',
+
+      // Upload helper notice
+      'upload.supportedNotice': 'FruGrade supports 6 fruit types: Apple, Banana, Mango, Orange, Strawberry, and Tomato. Each fruit is classified as Fresh or Rotten.',
+
       // Camera & File Validation Messages
       'msg.cameraPermissionDenied': 'Camera permission was denied. Please allow camera access in your browser settings or use Upload Image.',
       'msg.cameraNotFound': 'No camera detected on this device. Please use Upload Image instead.',
@@ -494,6 +534,8 @@
       'msg.imageTooSmall': 'Image resolution is too small. Minimum is 64 × 64 pixels.',
       'msg.unreadableImage': 'Image cannot be decoded. Please try another JPG or PNG file.',
       'msg.predictionFailed': 'Prediction failed. Please try again with another image.',
+      'msg.demoSimulatedError': 'Simulation failed: A simulated error occurred to test system failure handling. The model produced no prediction.',
+      'msg.demoCorruptedError': 'Simulation failed: Image file is damaged or corrupted and cannot be analyzed by the CNN model. Please try again with a clear photo.',
       'msg.sampleLoadFailed': 'Failed to load sample. Run via local server (npm run dev).'
     }
   };

@@ -191,9 +191,10 @@
     }
     if (dom.sessionChip) dom.sessionChip.classList.remove('is-hidden');
 
-    // Mascot reaksi
+    // Mascot reaksi (apple, banana, orange, mango, strawberry, tomato)
     if (dom.mascot) {
-      var mascotKey = (details.fruitKey === 'orange' || details.fruitKey === 'banana') ? details.fruitKey : 'apple';
+      var supportedMascots = ['apple', 'banana', 'orange', 'mango', 'strawberry', 'tomato'];
+      var mascotKey = supportedMascots.indexOf(details.fruitKey) !== -1 ? details.fruitKey : 'apple';
       if (dom.mascot.getAttribute('data-mascot') !== mascotKey) {
         dom.mascot.setAttribute('data-mascot', mascotKey);
         dom.mascot.removeAttribute('data-mounted');
@@ -280,22 +281,55 @@
     }).join('');
   }
 
-  function updateSummary(result, details) {
-    if (!dom.summary) return;
+  function buildSummary(res, det) {
+    var result = res || (data && data.result);
+    if (!result) return { plain: '', html: '' };
+
+    var details = det || resolveFruitDetails(result);
     var lang = getLang();
     var isFresh = details.freshness === 'fresh';
     var isRotten = details.freshness === 'rotten';
 
-    var lines = [
-      'FruGrade — ' + t('result.breadcrumbTitle'),
-      (lang === 'en' ? 'Fruit Type: ' : 'Jenis buah: ') + details.name,
-      (lang === 'en' ? 'Status: ' : 'Status: ') + (isFresh ? t('result.freshBadge') : (isRotten ? t('result.rottenBadge') : t('result.unknownBadge'))),
-      result.confidence != null ? ('Confidence: ' + FG.util.formatPercent(result.confidence, 1)) : ('Confidence: ' + t('result.unknownBadge')),
-      'Model: ' + FG.config.model.name + ' (' + FG.config.model.framework + ')',
-      'Input: ' + FG.config.model.input,
-      t('footer.tagline')
-    ];
-    dom.summary.textContent = lines.join('\n');
+    var fruitName = details.name || '';
+    var statusText = isFresh
+      ? t('result.freshBadge')
+      : (isRotten ? t('result.rottenBadge') : t('result.unknownBadge'));
+    var confText = result.confidence != null
+      ? FG.util.formatPercent(result.confidence, 1)
+      : t('result.unknownBadge');
+
+    var isId = lang !== 'en';
+    var title = isId ? 'Hasil Analisis' : 'Analysis Result';
+    var fruitLabel = isId ? 'Jenis buah: ' : 'Fruit Type: ';
+    var statusLabel = isId ? 'Status kesegaran: ' : 'Status: ';
+    var confLabel = 'Confidence: ';
+
+    var plain = [
+      'FruGrade',
+      'AI-Powered Fruit Classification',
+      '',
+      title,
+      fruitLabel + fruitName,
+      statusLabel + statusText,
+      confLabel + confText
+    ].join('\n');
+
+    var html =
+      '<p style="margin:0 0 12px 0;"><strong>FruGrade</strong><br><strong>AI-Powered Fruit Classification</strong></p>' +
+      '<p style="margin:0;">' +
+      FG.util.escapeHtml(title) + '<br>' +
+      FG.util.escapeHtml(fruitLabel + fruitName) + '<br>' +
+      FG.util.escapeHtml(statusLabel + statusText) + '<br>' +
+      FG.util.escapeHtml(confLabel + confText) +
+      '</p>';
+
+    return { plain: plain, html: html };
+  }
+
+  function updateSummary(result, details) {
+    if (!dom.summary) return;
+    var summary = buildSummary(result, details);
+    dom.summary.textContent = summary.plain;
   }
 
   /* ---------------- Animation ---------------- */
@@ -369,7 +403,10 @@
 
     if (dom.copy) {
       dom.copy.addEventListener('click', function () {
-        var text = dom.summary ? dom.summary.textContent : '';
+        var summary = buildSummary();
+        var plainText = summary.plain || (dom.summary ? dom.summary.textContent : '');
+        var htmlText = summary.html || plainText;
+
         var done = function () {
           var original = dom.copy.innerHTML;
           dom.copy.innerHTML = '<span class="icon text-[20px] text-forest-green">check</span> ' + t('result.copied');
@@ -377,12 +414,50 @@
           window.setTimeout(function () { dom.copy.innerHTML = original; }, 2000);
         };
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done).catch(function () {
-            FG.util.toast('Clipboard blocked. Please copy manually.', { type: 'error' });
-          });
+        var execFallback = function () {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = plainText;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '-9999px';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            var ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            if (ok) {
+              done();
+            } else {
+              FG.util.toast(t('result.copyBlocked', 'Akses papan klip diblokir. Silakan salin manual.'), { type: 'error' });
+            }
+          } catch (e) {
+            FG.util.toast(t('result.copyBlocked', 'Akses papan klip diblokir. Silakan salin manual.'), { type: 'error' });
+          }
+        };
+
+        var fallbackWrite = function () {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(plainText).then(done).catch(execFallback);
+          } else {
+            execFallback();
+          }
+        };
+
+        if (navigator.clipboard && typeof window.ClipboardItem !== 'undefined' && navigator.clipboard.write) {
+          try {
+            var blobHtml = new Blob([htmlText], { type: 'text/html' });
+            var blobPlain = new Blob([plainText], { type: 'text/plain' });
+            var item = new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobPlain
+            });
+            navigator.clipboard.write([item]).then(done).catch(fallbackWrite);
+          } catch (e) {
+            fallbackWrite();
+          }
         } else {
-          FG.util.toast('Clipboard is not supported in this browser.', { type: 'error' });
+          fallbackWrite();
         }
       });
     }

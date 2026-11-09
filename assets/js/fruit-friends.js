@@ -100,6 +100,72 @@
           '</g>' +
         '</svg>'
       );
+    },
+
+    mango: function (id) {
+      return (
+        '<svg viewBox="0 0 120 120" class="mascot-svg" aria-hidden="true" focusable="false">' +
+          '<defs>' +
+            '<radialGradient id="mgG' + id + '" cx="35%" cy="30%" r="75%">' +
+              '<stop offset="0" stop-color="#FFE072"/>' +
+              '<stop offset=".5" stop-color="#FFA834"/>' +
+              '<stop offset="1" stop-color="#E2651B"/>' +
+            '</radialGradient>' +
+          '</defs>' +
+          '<ellipse cx="60" cy="108" rx="28" ry="5" fill="#3D3835" opacity=".1"/>' +
+          '<path d="M60 30c-18 0-32 18-32 38 0 24 16 38 34 38 20 0 34-18 34-40 0-16-12-36-36-36z" fill="url(#mgG' + id + ')"/>' +
+          '<path d="M58 30c-1-8 2-15 6-18" stroke="#7A4A2A" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+          '<path d="M64 16c6-6 16-6 22-1-3 7-12 10-22 5z" fill="#7BA65B"/>' +
+          face(48, 72, 65, 'M54 77q6 5 12 0') +
+          '<ellipse cx="36" cy="76" rx="4.5" ry="2.8" fill="#F45155" opacity=".25"/>' +
+          '<ellipse cx="84" cy="76" rx="4.5" ry="2.8" fill="#F45155" opacity=".25"/>' +
+        '</svg>'
+      );
+    },
+
+    strawberry: function (id) {
+      return (
+        '<svg viewBox="0 0 120 120" class="mascot-svg" aria-hidden="true" focusable="false">' +
+          '<defs>' +
+            '<radialGradient id="stG' + id + '" cx="36%" cy="28%" r="76%">' +
+              '<stop offset="0" stop-color="#FF7578"/>' +
+              '<stop offset=".55" stop-color="#EA2B30"/>' +
+              '<stop offset="1" stop-color="#A51419"/>' +
+            '</radialGradient>' +
+          '</defs>' +
+          '<ellipse cx="60" cy="108" rx="24" ry="4.5" fill="#3D3835" opacity=".1"/>' +
+          '<path d="M60 102c-14-14-30-36-30-54 0-16 12-24 30-24s30 8 30 24c0 18-16 40-30 54z" fill="url(#stG' + id + ')"/>' +
+          '<g fill="#FFE9A6" opacity=".65">' +
+            '<circle cx="44" cy="48" r="1.2"/><circle cx="58" cy="42" r="1.2"/><circle cx="74" cy="46" r="1.2"/>' +
+            '<circle cx="38" cy="62" r="1.2"/><circle cx="80" cy="60" r="1.2"/><circle cx="50" cy="90" r="1.1"/><circle cx="68" cy="88" r="1.1"/>' +
+          '</g>' +
+          '<path d="M42 24c4 4 10 3 14-2 3 5 8 5 12 0 4 6 10 5 14 2-3 8-12 10-20 6-8 4-17 2-20-6z" fill="#7BA65B"/>' +
+          face(49, 71, 62, 'M54 74q6 5 12 0') +
+          '<ellipse cx="37" cy="72" rx="4" ry="2.5" fill="#FFA45B" opacity=".35"/>' +
+          '<ellipse cx="83" cy="72" rx="4" ry="2.5" fill="#FFA45B" opacity=".35"/>' +
+        '</svg>'
+      );
+    },
+
+    tomato: function (id) {
+      return (
+        '<svg viewBox="0 0 120 120" class="mascot-svg" aria-hidden="true" focusable="false">' +
+          '<defs>' +
+            '<radialGradient id="tmG' + id + '" cx="34%" cy="28%" r="78%">' +
+              '<stop offset="0" stop-color="#FF7578"/>' +
+              '<stop offset=".5" stop-color="#ED2E34"/>' +
+              '<stop offset="1" stop-color="#AD161B"/>' +
+            '</radialGradient>' +
+          '</defs>' +
+          '<ellipse cx="60" cy="109" rx="28" ry="5.5" fill="#3D3835" opacity=".1"/>' +
+          '<circle cx="60" cy="66" r="37" fill="url(#tmG' + id + ')"/>' +
+          '<path d="M60 28v-9" stroke="#5E8A44" stroke-width="3.5" stroke-linecap="round"/>' +
+          '<path d="M60 28l-8-6 5 8-9 2 9 3-4 8 7-5 4 8 3-8 8 5-4-8 9-3-9-2 5-8z" fill="#7BA65B"/>' +
+          face(48, 72, 64, 'M54 76q6 5 12 0') +
+          '<ellipse cx="35" cy="75" rx="5" ry="3" fill="#FFA45B" opacity=".3"/>' +
+          '<ellipse cx="85" cy="75" rx="5" ry="3" fill="#FFA45B" opacity=".3"/>' +
+        '</svg>'
+      );
     }
   };
 

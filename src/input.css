@@ -138,6 +138,9 @@
   .chip-rotten {
     @apply bg-error-container font-semibold text-on-error-container;
   }
+  .chip-error {
+    @apply bg-error-container font-semibold text-on-error-container;
+  }
   .chip-demo {
     @apply bg-tertiary-fixed/70 font-medium text-on-tertiary-fixed-variant;
   }

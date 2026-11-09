@@ -20,7 +20,8 @@
     busy: false,
     activeTab: 'upload', // 'upload' | 'camera'
     stageTimers: [],
-    progressTimer: null
+    progressTimer: null,
+    selectedDemoScenario: null
   };
 
   function t(key, fallback) {
@@ -200,7 +201,10 @@
           camera.stopStream();
           camera.isOpen = false;
 
-          // Route through the EXACT same handleFile() function
+          // Route through the EXACT same handleFile() function (resetting demo scenario)
+          state.selectedDemoScenario = null;
+          if (FG.api) FG.api.forcedScenario = null;
+          $$('[data-demo]').forEach(function (b) { b.removeAttribute('aria-pressed'); });
           handleFile(file).then(function (ok) {
             if (ok) {
               FG.util.toast(t('msg.cameraCaptured', 'Photo captured successfully from camera!'), { duration: 2500 });
@@ -241,6 +245,7 @@
     dom.fileName = $('#file-name');
     dom.fileMeta = $('#file-meta');
     dom.fileDims = $('#file-dims');
+    dom.previewCardTitle = $('#preview-card-title');
     dom.replace = $('#btn-replace');
     dom.retakeCamera = $('#btn-retake-camera');
     dom.remove = $('#btn-remove');
@@ -306,6 +311,30 @@
   }
 
   /* ---------------- Helpers ---------------- */
+  function setActionButtonsDisabled(disabled) {
+    var btns = [dom.replace, dom.retakeCamera, dom.remove];
+    btns.forEach(function (btn) {
+      if (!btn) return;
+      btn.disabled = !!disabled;
+      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+      if (disabled) {
+        btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      } else {
+        btn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      }
+    });
+
+    $$('[data-demo]').forEach(function (btn) {
+      btn.disabled = !!disabled;
+      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+      if (disabled) {
+        btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      } else {
+        btn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      }
+    });
+  }
+
   function setAnalyzeEnabled(on) {
     if (!dom.analyze) return;
     dom.analyze.disabled = !on;
@@ -313,8 +342,8 @@
     dom.analyze.classList.toggle('is-ready', !!on);
     if (dom.analyzeHint) {
       dom.analyzeHint.textContent = on
-        ? t('upload.hintReady', 'Image ready to be processed by CNN model.')
-        : t('upload.hintEmpty', 'Choose or capture an image first to enable analysis.');
+        ? t('upload.hintReady', 'Gambar siap dianalisis. Klik tombol untuk memulai pemindaian.')
+        : t('upload.hintEmpty', 'Pilih atau potret gambar terlebih dahulu untuk mengaktifkan pemindaian.');
     }
   }
 
@@ -427,10 +456,17 @@
 
     if (dom.statusChip) {
       dom.statusChip.className = 'chip chip-fresh';
-      dom.statusChip.innerHTML = '<span class="icon text-[15px]">check_circle</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.readyStatus', 'Ready to analyze')) + '</span>';
+      dom.statusChip.innerHTML = '<span class="icon text-[15px]">check_circle</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.readyStatus', 'Gambar siap dianalisis')) + '</span>';
+    }
+    if (dom.previewCardTitle) {
+      dom.previewCardTitle.textContent = t('upload.readyCardTitle', 'Gambar siap dianalisis');
     }
 
+    setActionButtonsDisabled(false);
     setAnalyzeEnabled(true);
+    if (dom.analyze) {
+      dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
+    }
     clearError();
 
     if (dom.mascot) {
@@ -443,6 +479,9 @@
     releasePreview();
     state.file = null;
     state.dims = null;
+    state.selectedDemoScenario = null;
+    if (FG.api) FG.api.forcedScenario = null;
+    $$('[data-demo]').forEach(function (b) { b.removeAttribute('aria-pressed'); });
 
     if (dom.input) dom.input.value = '';
     if (dom.cameraInput) dom.cameraInput.value = '';
@@ -460,10 +499,17 @@
       dom.statusChip.className = 'chip chip-neutral';
       dom.statusChip.innerHTML = '<span class="dot"></span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.waitingStatus', 'Waiting for image')) + '</span>';
     }
+    if (dom.previewCardTitle) {
+      dom.previewCardTitle.textContent = t('upload.readyCardTitle', 'Gambar siap dianalisis');
+    }
 
     hideProcessing();
     clearError();
+    setActionButtonsDisabled(false);
     setAnalyzeEnabled(false);
+    if (dom.analyze) {
+      dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
+    }
 
     if (dom.mascot) FG.fruit.setMood(dom.mascot, null);
   }
@@ -629,21 +675,149 @@
       });
   }
 
-  /* ---------------- Analyze Flow ---------------- */
-  function analyze() {
-    if (state.busy || !state.file) return;
-    state.busy = true;
-    setAnalyzeEnabled(false);
-    if (dom.analyzeHint) dom.analyzeHint.textContent = t('upload.hintBusy', 'Model is processing the image. Please keep this page open.');
-    clearError();
-    startProcessing();
-
-    if (dom.analyze) {
-      dom.analyze.classList.remove('is-ready');
-      dom.analyze.innerHTML = '<span class="icon animate-spin" aria-hidden="true">progress_activity</span><span>' + FG.util.escapeHtml(t('upload.analyzingBtn', 'Analyzing…')) + '</span>';
+  /* ---------------- Demo Scenarios Selection & Execution ---------------- */
+  /**
+   * Hanya memilih skenario dan menampilkan preview gambar.
+   * SAMA SEKALI TIDAK menjalankan simulasi atau analisis.
+   */
+  function selectDemoScenario(scenario, fruit, evt) {
+    if (evt) {
+      if (typeof evt.preventDefault === 'function') evt.preventDefault();
+      if (typeof evt.stopPropagation === 'function') evt.stopPropagation();
     }
+    if (state.busy) return;
 
-    FG.api
+    // 1. Simpan skenario yang dipilih
+    state.selectedDemoScenario = scenario;
+    if (FG.api) FG.api.forcedScenario = scenario;
+
+    // 2. Tandai status tombol demo secara visual
+    $$('[data-demo]').forEach(function (btn) {
+      var isThis = btn.getAttribute('data-demo') === scenario;
+      btn.setAttribute('aria-pressed', isThis ? 'true' : 'false');
+    });
+
+    var fruitName = fruit || (scenario === 'rotten' ? 'banana' : (scenario === 'error' ? 'corrupted' : 'apple'));
+
+    // 3. Muat gambar contoh dan tampilkan pada preview
+    var triggerBtn = evt && evt.currentTarget ? evt.currentTarget : $('[data-demo="' + scenario + '"]');
+    if (triggerBtn) triggerBtn.setAttribute('aria-busy', 'true');
+
+    FG.api.sampleFile(fruitName)
+      .then(function (file) {
+        return handleFile(file);
+      })
+      .then(function (ok) {
+        if (ok) {
+          if (scenario === 'error') {
+            // Skenario Simulasi Gagal: Tampilkan status skenario simulasi, tombol Pindai Buah tetap aktif
+            if (dom.statusChip) {
+              dom.statusChip.className = 'chip chip-demo';
+              dom.statusChip.innerHTML = '<span class="icon text-[15px]">science</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.demoErrorStatus', 'Skenario simulasi kegagalan')) + '</span>';
+            }
+            if (dom.previewCardTitle) {
+              dom.previewCardTitle.textContent = t('upload.demoErrorCardTitle', 'Skenario simulasi kegagalan');
+            }
+            setAnalyzeEnabled(true);
+            if (dom.analyzeHint) {
+              dom.analyzeHint.textContent = t('upload.hintDemoErrorReady', 'Skenario simulasi siap. Klik Pindai Buah untuk menguji simulasi kegagalan proses.');
+            }
+            setActionButtonsDisabled(false);
+            clearError();
+            hideProcessing();
+            if (dom.mascot) FG.fruit.setMood(dom.mascot, null);
+          } else {
+            // Skenario Segar / Busuk: Status Siap & tombol Pindai Buah aktif
+            if (dom.statusChip) {
+              dom.statusChip.className = 'chip chip-fresh';
+              dom.statusChip.innerHTML = '<span class="icon text-[15px]">check_circle</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.readyStatus', 'Gambar siap dianalisis')) + '</span>';
+            }
+            if (dom.previewCardTitle) {
+              dom.previewCardTitle.textContent = t('upload.readyCardTitle', 'Gambar siap dianalisis');
+            }
+            setAnalyzeEnabled(true);
+            if (dom.analyzeHint) {
+              dom.analyzeHint.textContent = t('upload.hintReady', 'Gambar siap dianalisis. Klik tombol untuk memulai pemindaian.');
+            }
+            setActionButtonsDisabled(false);
+            clearError();
+            hideProcessing();
+            if (dom.mascot) FG.fruit.setMood(dom.mascot, 'excited');
+          }
+
+          if (dom.previewContainer && window.innerWidth < 1024) {
+            dom.previewContainer.scrollIntoView({ behavior: FG.util.prefersReduced() ? 'auto' : 'smooth', block: 'start' });
+          }
+        }
+      })
+      .catch(function () {
+        FG.util.toast(t('msg.sampleLoadFailed', 'Failed to load sample. Run via local server (npm run dev).'), { type: 'error' });
+      })
+      .then(function () {
+        if (triggerBtn) triggerBtn.removeAttribute('aria-busy');
+      });
+
+    // PENTING: Sama sekali tidak memanggil analyze() atau setTimeout di sini!
+  }
+
+  /**
+   * Menjalankan simulasi demo hasil buah segar, buah busuk, atau error.
+   * HANYA dipanggil setelah pengguna menekan tombol Pindai Buah secara manual.
+   */
+  function executeDemoScenario(scenario) {
+    if (FG.api) FG.api.forcedScenario = scenario;
+    return FG.api
+      .predict(state.file)
+      .then(function (result) {
+        return FG.store.makeThumb(state.file, 900).then(function (thumb) {
+          return { result: result, thumb: thumb };
+        });
+      })
+      .then(function (payload) {
+        finishProcessing();
+        var saved = FG.store.save({
+          result: payload.result,
+          image: payload.thumb.dataUrl,
+          file: {
+            name: state.file.name || 'sample.jpg',
+            size: state.file.size,
+            width: payload.thumb.width,
+            height: payload.thumb.height
+          },
+          at: new Date().toISOString()
+        });
+
+        if (!saved) {
+          throw new Error('Could not persist result in this session. Please try again.');
+        }
+
+        window.setTimeout(function () {
+          window.location.href = 'result.html';
+        }, 520);
+      })
+      .catch(function (err) {
+        state.busy = false;
+        hideProcessing();
+        if (dom.progressFill) dom.progressFill.classList.add('is-error');
+        setActionButtonsDisabled(false);
+        setAnalyzeEnabled(true);
+        if (dom.analyze) {
+          dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
+        }
+        var code = (err && err.code) || (scenario === 'error' ? 'SIMULATED_ERROR' : 'PREDICTION_FAILED');
+        var message = (err && err.message) || (scenario === 'error'
+          ? t('msg.demoSimulatedError', 'Simulasi gagal: Terjadi kesalahan yang disimulasikan untuk menguji penanganan error. Model tidak menghasilkan prediksi.')
+          : t('msg.predictionFailed', 'Prediksi gagal. Coba lagi dengan gambar lain.'));
+        showError(code, message);
+        if (dom.mascot) FG.fruit.setMood(dom.mascot, 'sad');
+      });
+  }
+
+  /**
+   * Menjalankan analisis model normal untuk gambar upload perangkat atau jepretan kamera.
+   */
+  function executeStandardAnalysis() {
+    return FG.api
       .predict(state.file)
       .then(function (result) {
         return FG.store.makeThumb(state.file, 900).then(function (thumb) {
@@ -676,36 +850,63 @@
         state.busy = false;
         hideProcessing();
         if (dom.progressFill) dom.progressFill.classList.add('is-error');
+        setActionButtonsDisabled(false);
         setAnalyzeEnabled(true);
         if (dom.analyze) {
-          dom.analyze.innerHTML = '<span class="icon" aria-hidden="true">auto_awesome</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Analisis Buah')) + '</span>';
+          dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
         }
-        showError(err.code || 'PREDICTION_FAILED', err.message || t('msg.predictionFailed', 'Prediction failed. Please try again with another image.'));
+        var code = (err && err.code) || (scenario === 'error' ? 'SIMULATED_ERROR' : 'PREDICTION_FAILED');
+        var message = (err && err.message) || (scenario === 'error'
+          ? t('msg.demoSimulatedError', 'Simulasi gagal: Terjadi kesalahan yang disimulasikan untuk menguji penanganan error. Model tidak menghasilkan prediksi.')
+          : t('msg.predictionFailed', 'Prediksi gagal. Coba lagi dengan gambar lain.'));
+        showError(code, message);
+        if (dom.mascot) FG.fruit.setMood(dom.mascot, 'sad');
       });
   }
 
-  /* ---------------- Demo Scenarios ---------------- */
+  /**
+   * Hanya dipanggil saat pengguna mengklik tombol Pindai Buah.
+   */
+  function handleAnalyzeClick(e) {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    if (state.busy || !state.file) return;
+
+    state.busy = true;
+    setAnalyzeEnabled(false);
+    setActionButtonsDisabled(true);
+    if (dom.analyzeHint) dom.analyzeHint.textContent = t('upload.hintBusy', 'Model is processing the image. Please keep this page open.');
+    clearError();
+    startProcessing();
+
+    if (dom.analyze) {
+      dom.analyze.classList.remove('is-ready');
+      dom.analyze.innerHTML = '<span class="icon animate-spin" aria-hidden="true">progress_activity</span><span>' + FG.util.escapeHtml(t('upload.analyzingBtn', 'Memindai…')) + '</span>';
+    }
+
+    if (state.selectedDemoScenario) {
+      executeDemoScenario(state.selectedDemoScenario);
+      return;
+    }
+
+    executeStandardAnalysis();
+  }
+
+  // Alias untuk kompatibilitas
+  var analyze = handleAnalyzeClick;
+
+  /* ---------------- Demo Scenarios Binding ---------------- */
   function initDemo() {
     $$('[data-demo]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (state.busy) return;
         var scenario = btn.getAttribute('data-demo');
         var fruit = btn.getAttribute('data-fruit') || 'apple';
-        FG.api.forcedScenario = scenario;
-
-        btn.setAttribute('aria-busy', 'true');
-        FG.api.sampleFile(fruit)
-          .then(function (file) {
-            return handleFile(file).then(function (ok) {
-              if (ok) window.setTimeout(analyze, 600);
-            });
-          })
-          .catch(function () {
-            FG.util.toast(t('msg.sampleLoadFailed', 'Failed to load sample. Run via local server (npm run dev).'), { type: 'error' });
-          })
-          .then(function () {
-            btn.removeAttribute('aria-busy');
-          });
+        selectDemoScenario(scenario, fruit, e);
       });
     });
   }
@@ -713,18 +914,58 @@
   /* ---------------- Language Change Observer ---------------- */
   function onLanguageChange() {
     if (state.file) {
-      if (dom.statusChip) {
-        dom.statusChip.innerHTML = '<span class="icon text-[15px]">check_circle</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.readyStatus', 'Ready to analyze')) + '</span>';
+      if (state.selectedDemoScenario === 'error') {
+        if (dom.statusChip) {
+          dom.statusChip.className = 'chip chip-demo';
+          dom.statusChip.innerHTML = '<span class="icon text-[15px]">science</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.demoErrorStatus', 'Skenario simulasi kegagalan')) + '</span>';
+        }
+        if (dom.previewCardTitle) {
+          dom.previewCardTitle.textContent = t('upload.demoErrorCardTitle', 'Skenario simulasi kegagalan');
+        }
+        if (dom.analyzeHint) {
+          dom.analyzeHint.textContent = state.busy ? t('upload.hintBusy', 'Model is processing the image. Please keep this page open.') : t('upload.hintDemoErrorReady', 'Skenario simulasi siap. Klik Pindai Buah untuk menguji simulasi kegagalan proses.');
+        }
+      } else {
+        if (dom.statusChip) {
+          dom.statusChip.className = 'chip chip-fresh';
+          dom.statusChip.innerHTML = '<span class="icon text-[15px]">check_circle</span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.readyStatus', 'Gambar siap dianalisis')) + '</span>';
+        }
+        if (dom.previewCardTitle) {
+          dom.previewCardTitle.textContent = t('upload.readyCardTitle', 'Gambar siap dianalisis');
+        }
+        if (dom.analyzeHint) {
+          dom.analyzeHint.textContent = state.busy ? t('upload.hintBusy', 'Model is processing the image. Please keep this page open.') : t('upload.hintReady', 'Gambar siap dianalisis. Klik tombol untuk memulai pemindaian.');
+        }
       }
-      if (dom.analyzeHint) {
-        dom.analyzeHint.textContent = state.busy ? t('upload.hintBusy', 'Model is processing the image. Please keep this page open.') : t('upload.hintReady', 'Image ready to be processed by CNN model.');
+      if (dom.analyze) {
+        if (state.busy) {
+          dom.analyze.innerHTML = '<span class="icon animate-spin" aria-hidden="true">progress_activity</span><span>' + FG.util.escapeHtml(t('upload.analyzingBtn', 'Memindai…')) + '</span>';
+        } else {
+          dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
+        }
       }
     } else {
       if (dom.statusChip) {
-        dom.statusChip.innerHTML = '<span class="dot"></span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.waitingStatus', 'Waiting for image')) + '</span>';
+        dom.statusChip.className = 'chip chip-neutral';
+        dom.statusChip.innerHTML = '<span class="dot"></span> <span id="upload-status-text">' + FG.util.escapeHtml(t('upload.waitingStatus', 'Menunggu gambar')) + '</span>';
+      }
+      if (dom.previewCardTitle) {
+        dom.previewCardTitle.textContent = t('upload.readyCardTitle', 'Gambar siap dianalisis');
       }
       if (dom.analyzeHint) {
-        dom.analyzeHint.textContent = t('upload.hintEmpty', 'Choose or capture an image first to enable analysis.');
+        dom.analyzeHint.textContent = t('upload.hintEmpty', 'Pilih atau potret gambar terlebih dahulu untuk mengaktifkan pemindaian.');
+      }
+      if (dom.analyze) {
+        dom.analyze.innerHTML = '<span class="icon text-[20px]" aria-hidden="true">document_scanner</span><span>' + FG.util.escapeHtml(t('upload.analyzeBtn', 'Pindai Buah')) + '</span>';
+      }
+    }
+
+    if (dom.errorPanel && !dom.errorPanel.hidden && dom.errorCode) {
+      var curCode = dom.errorCode.textContent.trim();
+      if (curCode === 'SIMULATED_ERROR' && dom.errorMessage) {
+        dom.errorMessage.textContent = t('msg.demoSimulatedError', 'Simulasi gagal: Terjadi kesalahan yang disimulasikan untuk menguji penanganan error. Model tidak menghasilkan prediksi.');
+      } else if (curCode === 'FILE_CORRUPTED' && dom.errorMessage) {
+        dom.errorMessage.textContent = t('msg.demoCorruptedError', 'Simulasi gagal: Berkas gambar rusak atau korup sehingga tidak dapat dianalisis oleh model CNN. Silakan coba lagi dengan foto yang jelas.');
       }
     }
   }
@@ -734,14 +975,24 @@
     // Normal file input
     if (dom.input) {
       dom.input.addEventListener('change', function (e) {
-        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+        if (e.target.files && e.target.files[0]) {
+          state.selectedDemoScenario = null;
+          if (FG.api) FG.api.forcedScenario = null;
+          $$('[data-demo]').forEach(function (b) { b.removeAttribute('aria-pressed'); });
+          handleFile(e.target.files[0]);
+        }
       });
     }
 
     // Camera mobile fallback file input
     if (dom.cameraInput) {
       dom.cameraInput.addEventListener('change', function (e) {
-        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+        if (e.target.files && e.target.files[0]) {
+          state.selectedDemoScenario = null;
+          if (FG.api) FG.api.forcedScenario = null;
+          $$('[data-demo]').forEach(function (b) { b.removeAttribute('aria-pressed'); });
+          handleFile(e.target.files[0]);
+        }
       });
     }
 
@@ -778,6 +1029,7 @@
     // Retake from preview
     if (dom.retakeCamera) {
       dom.retakeCamera.addEventListener('click', function () {
+        if (state.busy) return;
         camera.open();
         if (dom.viewCamera && window.innerWidth < 1024) {
           dom.viewCamera.scrollIntoView({ behavior: FG.util.prefersReduced() ? 'auto' : 'smooth', block: 'center' });
@@ -788,10 +1040,12 @@
     // Dropzone interactions
     if (dom.dropzone) {
       dom.dropzone.addEventListener('click', function () {
+        if (state.busy) return;
         dom.input.click();
       });
 
       dom.dropzone.addEventListener('keydown', function (e) {
+        if (state.busy) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           dom.input.click();
@@ -802,6 +1056,7 @@
       ['dragenter', 'dragover'].forEach(function (type) {
         dom.dropzone.addEventListener(type, function (e) {
           e.preventDefault();
+          if (state.busy) return;
           if (type === 'dragenter') dragDepth += 1;
           dom.dropzone.classList.add('is-dragging');
           if (dom.mascot) FG.fruit.setMood(dom.mascot, 'excited');
@@ -822,14 +1077,21 @@
         dragDepth = 0;
         dom.dropzone.classList.remove('is-dragging');
         if (dom.mascot) FG.fruit.setMood(dom.mascot, null);
+        if (state.busy) return;
         var files = e.dataTransfer && e.dataTransfer.files;
-        if (files && files[0]) handleFile(files[0]);
+        if (files && files[0]) {
+          state.selectedDemoScenario = null;
+          if (FG.api) FG.api.forcedScenario = null;
+          $$('[data-demo]').forEach(function (b) { b.removeAttribute('aria-pressed'); });
+          handleFile(files[0]);
+        }
       });
     }
 
     // Change image / Browse button
     if (dom.replace) {
       dom.replace.addEventListener('click', function () {
+        if (state.busy) return;
         setTab('upload');
         dom.input.click();
       });
@@ -838,6 +1100,7 @@
     // Remove image
     if (dom.remove) {
       dom.remove.addEventListener('click', function () {
+        if (state.busy) return;
         resetPreview();
         FG.util.toast(t('msg.imageRemoved', 'Image removed.'), { duration: 2200 });
       });

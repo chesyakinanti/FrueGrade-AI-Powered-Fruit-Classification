@@ -1,4 +1,27 @@
+
+# Frontend dependencies
 node_modules/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+backend/.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Temporary browser profile
+scratch/edge_temp_profile/
+
+# Model files - stored separately in Google Drive
+*.keras
+
+# System files
 .DS_Store
 Thumbs.db
+
+# Log files
 *.log

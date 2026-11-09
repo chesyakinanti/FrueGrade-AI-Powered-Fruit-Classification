@@ -58,10 +58,10 @@
     fruits: {
       apple: { id: 'apple', nameId: 'Apel', nameEn: 'Apple', latin: 'Malus domestica', image: 'assets/img/apple.jpg' },
       banana: { id: 'banana', nameId: 'Pisang', nameEn: 'Banana', latin: 'Musa × paradisiaca', image: 'assets/img/banana.jpg' },
-      mango: { id: 'mango', nameId: 'Mangga', nameEn: 'Mango', latin: 'Mangifera indica', image: 'assets/img/hero-fruit.jpg' },
+      mango: { id: 'mango', nameId: 'Mangga', nameEn: 'Mango', latin: 'Mangifera indica', image: 'assets/img/mango.jpg' },
       orange: { id: 'orange', nameId: 'Jeruk', nameEn: 'Orange', latin: 'Citrus × sinensis', image: 'assets/img/orange.jpg' },
-      strawberry: { id: 'strawberry', nameId: 'Stroberi', nameEn: 'Strawberry', latin: 'Fragaria × ananassa', image: 'assets/img/hero-fruit.jpg' },
-      tomato: { id: 'tomato', nameId: 'Tomat', nameEn: 'Tomato', latin: 'Solanum lycopersicum', image: 'assets/img/hero-fruit.jpg' }
+      strawberry: { id: 'strawberry', nameId: 'Stroberi', nameEn: 'Strawberry', latin: 'Fragaria × ananassa', image: 'assets/img/strawberry.jpg' },
+      tomato: { id: 'tomato', nameId: 'Tomat', nameEn: 'Tomato', latin: 'Solanum lycopersicum', image: 'assets/img/tomato.jpg' }
     },
 
     labels: {

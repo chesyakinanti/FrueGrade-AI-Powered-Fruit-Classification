@@ -1,0 +1,6 @@
+Flask>=3.0,<4.0
+Flask-Cors>=4.0,<6.0
+Pillow>=10.0,<13.0
+numpy>=1.26
+# Use the same TensorFlow version as the Colab environment when possible.
+tensorflow==2.21.0

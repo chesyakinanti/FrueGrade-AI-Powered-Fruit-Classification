@@ -122,8 +122,12 @@
       return new Promise(function (resolve, reject) {
         setTimeout(function () {
           if (scenario === 'error') {
-            var err = new Error(window.FG.i18n ? window.FG.i18n.t('msg.predictionFailed') : 'Model failed to process image. Try another photo.');
-            err.code = 'PREDICTION_FAILED';
+            var fallbackErr = 'Simulasi gagal: Terjadi kesalahan yang disimulasikan untuk menguji penanganan error. Model tidak menghasilkan prediksi.';
+            var errMsg = window.FG.i18n
+              ? window.FG.i18n.t('msg.demoSimulatedError', fallbackErr)
+              : fallbackErr;
+            var err = new Error(errMsg);
+            err.code = 'SIMULATED_ERROR';
             reject(err);
             return;
           }
@@ -209,15 +213,18 @@
         apple: 'apple.jpg',
         orange: 'orange.jpg',
         banana: 'banana.jpg',
-        mango: 'hero-fruit.jpg',
-        strawberry: 'hero-fruit.jpg',
-        tomato: 'hero-fruit.jpg'
+        mango: 'mango.jpg',
+        strawberry: 'strawberry.jpg',
+        tomato: 'tomato.jpg',
+        corrupted: 'corrupted.jpg',
+        error: 'corrupted.jpg'
       };
       var name = map[fruitId] || 'apple.jpg';
       return fetch('assets/img/' + name)
         .then(function (r) { return r.blob(); })
         .then(function (blob) {
-          return new File([blob], 'sample-' + fruitId + '.jpg', { type: 'image/jpeg' });
+          var filename = (fruitId === 'corrupted' || fruitId === 'error') ? 'sample-corrupted.jpg' : ('sample-' + fruitId + '.jpg');
+          return new File([blob], filename, { type: 'image/jpeg' });
         });
     }
   };
